@@ -19,7 +19,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "rynnavinx.sspb.SSPBClientMod"
+      "rynnavinx.sspb.client.SSPBClientMod"
     ]
   },
   "custom": {
@@ -38,6 +38,6 @@
     "minecraft": "1.17.x",
     "java": ">=16",
 
-    "sodium": "0.3.3"
+    "sodium": "0.3.x"
   }
 }

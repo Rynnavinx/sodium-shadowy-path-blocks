@@ -6,7 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "MixinSmoothLightPipeline"
+    "MixinSmoothLightPipeline",
+    "MixinSodiumOptionsGUI"
   ],
   "injectors": {
     "defaultRequire": 1

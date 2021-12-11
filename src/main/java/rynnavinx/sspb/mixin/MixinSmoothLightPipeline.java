@@ -14,6 +14,7 @@ import net.minecraft.util.math.Direction;
 
 import rynnavinx.sspb.reflection.ReflectionAoFaceData;
 import rynnavinx.sspb.reflection.ReflectionSmoothLightPipeline;
+import rynnavinx.sspb.client.SSPBClientMod;
 
 
 @Mixin(SmoothLightPipeline.class)
@@ -55,16 +56,18 @@ public class MixinSmoothLightPipeline {
 
 		if(lightCache.getWorld().getFluidState(pos).isEmpty()){
 			// Mix between sodium inset lighting (default applyInsetPartialFace) and vanilla-like inset lighting (applyAlignedPartialFace).
-			// TODO: allow control over the ratio between sodium and vanilla-like inset lighting
+			float shadowyness = SSPBClientMod.options().getShadowyness(); // vanilla-like inset lighting percentage
+			float shadowynessCompliment = SSPBClientMod.options().getShadowynessCompliment(); // sodium inset lighting percentage
+
 			if(offset){
-				ao = (((ao1 * n1d) + (ao2 * n2d)) * 0.15f) + (ao2 * 0.85f);
-				sl = (((sl1 * n1d) + (sl2 * n2d)) * 0.15f) + (sl2 * 0.85f);
-				bl = (((bl1 * n1d) + (bl2 * n2d)) * 0.15f) + (bl2 * 0.85f);
+				ao = (((ao1 * n1d) + (ao2 * n2d)) * shadowynessCompliment) + (ao2 * shadowyness);
+				sl = (((sl1 * n1d) + (sl2 * n2d)) * shadowynessCompliment) + (sl2 * shadowyness);
+				bl = (((bl1 * n1d) + (bl2 * n2d)) * shadowynessCompliment) + (bl2 * shadowyness);
 			}
 			else{
-				ao = (((ao1 * n1d) + (ao2 * n2d)) * 0.15f) + (ao1 * 0.85f);
-				sl = (((sl1 * n1d) + (sl2 * n2d)) * 0.15f) + (sl1 * 0.85f);
-				bl = (((bl1 * n1d) + (bl2 * n2d)) * 0.15f) + (bl1 * 0.85f);
+				ao = (((ao1 * n1d) + (ao2 * n2d)) * shadowynessCompliment) + (ao1 * shadowyness);
+				sl = (((sl1 * n1d) + (sl2 * n2d)) * shadowynessCompliment) + (sl1 * shadowyness);
+				bl = (((bl1 * n1d) + (bl2 * n2d)) * shadowynessCompliment) + (bl1 * shadowyness);
 			}
 		}
 		else{
