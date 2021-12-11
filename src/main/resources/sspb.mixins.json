@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "rynnavinx.sspb.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+  ],
+  "client": [
+    "MixinSmoothLightPipeline"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
