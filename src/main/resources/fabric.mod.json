@@ -9,8 +9,9 @@
     "Rynnavinx"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/sodium-shadowy-path-blocks",
+    "sources": "https://github.com/Rynnavinx/sodium-shadowy-path-blocks",
+    "issues": "https://github.com/Rynnavinx/sodium-shadowy-path-blocks/issues"
   },
 
   "license": "LGPLv3",
