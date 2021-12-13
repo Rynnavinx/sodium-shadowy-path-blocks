@@ -4,9 +4,7 @@ Sodium Shadowy Path Blocks (or SSPB for short) reintroduces vanilla-like smooth 
 
 The strength of this shading is also adjustable.
 
-This lighting is not exactly the same as vanilla, only vanilla-like, as the way I'm doing this is entirely based on Sodium's existing smooth lighting code.
-
-Requires Sodium (duh).
+This lighting is not exactly the same as vanilla, only vanilla-like, as the way I'm doing this is entirely based on Sodium's smooth lighting code.
 
 # License
 
