@@ -24,7 +24,7 @@ public class SSPBGameOptionPages {
         groups.add(OptionGroup.createBuilder()
                 .add(OptionImpl.createBuilder(int.class, sspbOpts)
                         .setName(new LiteralText("Shadowyness"))
-                        .setTooltip(new LiteralText("Adjusts the strength of the vanilla-like inset block shadows\n\n0% - None (Sodium Default)\n85% - Default\n100% - Max"))
+                        .setTooltip(new LiteralText("Adjusts the strength of the vanilla-like shadows on non-full blocks\n\n0% - None (Sodium Default)\n85% - Default\n100% - Max"))
                         .setControl(option -> new SliderControl(option, 0, 100, 1, ControlValueFormatter.percentage()))
                         .setBinding(SSPBGameOptions::updateShadowyness, opts -> opts.shadowynessPercent)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
