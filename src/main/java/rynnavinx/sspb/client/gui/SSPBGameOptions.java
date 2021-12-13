@@ -15,7 +15,7 @@ import java.nio.file.Path;
 
 public class SSPBGameOptions {
 
-    private static final String DEFAULT_FILE_NAME = "sspb-options.json";
+    private static final String DEFAULT_FILE_NAME = "sodium-shadowy-path-blocks-options.json";
     private static final Gson GSON = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .setPrettyPrinting()
