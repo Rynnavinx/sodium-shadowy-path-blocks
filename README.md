@@ -1,10 +1,10 @@
 # Sodium Shadowy Path Blocks
 
-SSPB reintroduces vanilla-like lighting to all non-fluid blocks with inset tops (e.g. dirt paths and how they have dark shading when directly next to a full block), as Sodium removes this.
+Sodium Shadowy Path Blocks (or SSPB for short) reintroduces vanilla-like lighting to all non-fluid blocks with non-full faces (e.g. dirt paths and how they have dark shading when directly next to a full block), as Sodium removes this (or rather, fixes this, as it's technically a bug).
 
-You can also change the strength of this shading.
+The strength of this shading is also adjustable.
 
-This lighting is not exactly the same as vanilla, only vanilla-like.
+This lighting is not exactly the same as vanilla, only vanilla-like, as the way I'm doing this only really uses Sodium's existing smooth lighting code.
 
 Requires Sodium (duh).
 
