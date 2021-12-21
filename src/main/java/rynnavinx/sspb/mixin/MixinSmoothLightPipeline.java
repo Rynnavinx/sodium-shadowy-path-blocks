@@ -1,6 +1,8 @@
 package rynnavinx.sspb.mixin;
 
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -11,6 +13,7 @@ import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.block.BlockState;
 
 import rynnavinx.sspb.reflection.ReflectionAoFaceData;
 import rynnavinx.sspb.reflection.ReflectionSmoothLightPipeline;
@@ -54,7 +57,8 @@ public class MixinSmoothLightPipeline {
 		float sl;
 		float bl;
 
-		if(lightCache.getWorld().getFluidState(pos).isEmpty()){
+		BlockState blockState = lightCache.getWorld().getBlockState(pos);
+		if(blockState.getBlock().isTranslucent(blockState, lightCache.getWorld(), pos)){
 			// Mix between sodium inset lighting (default applyInsetPartialFace) and vanilla-like inset lighting (applyAlignedPartialFace).
 			float shadowyness = SSPBClientMod.options().getShadowyness(); // vanilla-like inset lighting percentage
 			float shadowynessCompliment = SSPBClientMod.options().getShadowynessCompliment(); // sodium inset lighting percentage
@@ -71,7 +75,7 @@ public class MixinSmoothLightPipeline {
 			}
 		}
 		else{
-			// Do not apply this change to fluids
+			// Do not apply this change to fluids or full blocks (to fix custom 3D models having dark insides)
 			ao = (ao1 * n1d) + (ao2 * n2d);
 			sl = (sl1 * n1d) + (sl2 * n2d);
 			bl = (bl1 * n1d) + (bl2 * n2d);
