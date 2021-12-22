@@ -6,8 +6,9 @@
   "mixins": [
   ],
   "client": [
-    "MixinSmoothLightPipeline",
-    "MixinSodiumOptionsGUI"
+    "sodium.MixinSmoothLightPipeline",
+    "sodium.MixinSodiumOptionsGUI",
+    "reeses_sodium_options.MixinSodiumVideoOptionsScreen"
   ],
   "injectors": {
     "defaultRequire": 1

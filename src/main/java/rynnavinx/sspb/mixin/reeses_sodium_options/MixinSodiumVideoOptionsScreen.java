@@ -1,10 +1,12 @@
-package rynnavinx.sspb.mixin;
+package rynnavinx.sspb.mixin.reeses_sodium_options;
 
-import me.jellysquid.mods.sodium.client.gui.SodiumOptionsGUI;
+import me.flashyreese.mods.reeses_sodium_options.client.gui.SodiumVideoOptionsScreen;
+
 import me.jellysquid.mods.sodium.client.gui.options.OptionPage;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,8 +17,8 @@ import rynnavinx.sspb.client.gui.SSPBGameOptionPages;
 import java.util.List;
 
 
-@Mixin(SodiumOptionsGUI.class)
-public class MixinSodiumOptionsGUI {
+@Pseudo @Mixin(SodiumVideoOptionsScreen.class)
+public class MixinSodiumVideoOptionsScreen {
 
     @Shadow @Final
     private List<OptionPage> pages;
