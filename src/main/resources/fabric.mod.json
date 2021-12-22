@@ -42,5 +42,13 @@
       "0.3.x",
       "0.4.0-alpha5"
     ]
+  },
+
+  "suggests": {
+    "reeses-sodium-options": ">=1.2.3"
+  },
+
+  "conflicts": {
+    "lambdabettergrass": "*"
   }
 }
