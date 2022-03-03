@@ -1,0 +1,5 @@
+{
+  "sspb.pages.sspb_page.name":"SSPB",
+  "sspb.options.shadowyness.name":"阴影",
+  "sspb.options.shadowyness.tooltip":"调整非完整方块上的原版阴影强度\n\n0% - 无 (Sodium 默认)\n85% - 默认\n100% - 最大"
+}
