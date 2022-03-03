@@ -9,7 +9,7 @@ import me.jellysquid.mods.sodium.client.gui.options.OptionPage;
 import me.jellysquid.mods.sodium.client.gui.options.control.ControlValueFormatter;
 import me.jellysquid.mods.sodium.client.gui.options.control.SliderControl;
 
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 
 import rynnavinx.sspb.client.gui.options.storage.SSPBOptionsStorage;
 
@@ -26,14 +26,14 @@ public class SSPBGameOptionPages {
         List<OptionGroup> groups = new ArrayList<>();
         groups.add(OptionGroup.createBuilder()
                 .add(OptionImpl.createBuilder(int.class, sspbOpts)
-                        .setName(new LiteralText("Shadowyness"))
-                        .setTooltip(new LiteralText("Adjusts the strength of the vanilla-like shadows on non-full blocks\n\n0% - None (Sodium Default)\n85% - Default\n100% - Max"))
+                        .setName(new TranslatableText("sspb.options.shadowyness.name"))
+                        .setTooltip(new TranslatableText("sspb.options.shadowyness.tooltip"))
                         .setControl(option -> new SliderControl(option, 0, 100, 1, ControlValueFormatter.percentage()))
                         .setBinding(SSPBGameOptions::updateShadowyness, opts -> opts.shadowynessPercent)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .build()
                 ).build());
 
-        return new OptionPage(new LiteralText("SSPB"), ImmutableList.copyOf(groups));
+        return new OptionPage(new TranslatableText("sspb.pages.sspb_page.name"), ImmutableList.copyOf(groups));
     }
 }

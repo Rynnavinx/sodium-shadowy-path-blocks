@@ -1,6 +1,5 @@
 package rynnavinx.sspb.client.gui.options.storage;
 
-import me.jellysquid.mods.sodium.client.SodiumClientMod;
 import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
 
 import rynnavinx.sspb.client.SSPBClientMod;
@@ -26,6 +25,6 @@ public class SSPBOptionsStorage implements OptionStorage<SSPBGameOptions> {
             throw new RuntimeException("Couldn't save SSPB config changes", e);
         }
 
-        SodiumClientMod.logger().info("Saved changes to SSPB config");
+        SSPBClientMod.LOGGER.info("[SSPB] Saved changes to SSPB config");
     }
 }

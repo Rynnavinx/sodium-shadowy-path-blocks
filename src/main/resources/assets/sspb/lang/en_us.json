@@ -1,0 +1,5 @@
+{
+  "sspb.pages.sspb_page.name":"SSPB",
+  "sspb.options.shadowyness.name":"Shadowyness",
+  "sspb.options.shadowyness.tooltip":"Adjusts the strength of the vanilla-like shadows on non-full blocks\n\n0% - None (Sodium Default)\n85% - Default\n100% - Max"
+}
