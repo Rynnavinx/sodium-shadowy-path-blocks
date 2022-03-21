@@ -47,11 +47,10 @@
   },
 
   "suggests": {
-    "reeses-sodium-options": ">=1.4.2"
+    "reeses-sodium-options": ">=1.2.3"
   },
 
   "conflicts": {
-    "lambdabettergrass": "*",
-    "reeses-sodium-options": "<=1.4.1"
+    "lambdabettergrass": "*"
   }
 }
