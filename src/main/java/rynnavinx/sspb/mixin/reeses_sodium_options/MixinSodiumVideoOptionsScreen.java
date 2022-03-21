@@ -6,7 +6,6 @@ import me.jellysquid.mods.sodium.client.gui.options.OptionPage;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,7 +16,7 @@ import rynnavinx.sspb.client.gui.SSPBGameOptionPages;
 import java.util.List;
 
 
-@Pseudo @Mixin(SodiumVideoOptionsScreen.class)
+@Mixin(SodiumVideoOptionsScreen.class)
 public class MixinSodiumVideoOptionsScreen {
 
     @Shadow @Final

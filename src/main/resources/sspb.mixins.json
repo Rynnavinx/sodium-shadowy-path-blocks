@@ -10,6 +10,7 @@
     "sodium.MixinSodiumOptionsGUI",
     "reeses_sodium_options.MixinSodiumVideoOptionsScreen"
   ],
+  "plugin": "rynnavinx.sspb.mixin.SSPBMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }
