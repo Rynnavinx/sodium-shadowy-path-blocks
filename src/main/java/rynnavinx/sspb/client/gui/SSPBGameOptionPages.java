@@ -8,6 +8,7 @@ import me.jellysquid.mods.sodium.client.gui.options.OptionImpl;
 import me.jellysquid.mods.sodium.client.gui.options.OptionPage;
 import me.jellysquid.mods.sodium.client.gui.options.control.ControlValueFormatter;
 import me.jellysquid.mods.sodium.client.gui.options.control.SliderControl;
+import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
 
 import net.minecraft.text.TranslatableText;
 
@@ -31,8 +32,15 @@ public class SSPBGameOptionPages {
                         .setControl(option -> new SliderControl(option, 0, 100, 1, ControlValueFormatter.percentage()))
                         .setBinding(SSPBGameOptions::updateShadowyness, opts -> opts.shadowynessPercent)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                        .build()
-                ).build());
+                        .build())
+                .add(OptionImpl.createBuilder(boolean.class, sspbOpts)
+                        .setName(new TranslatableText("sspb.options.onlyaffectpathblocks.name"))
+                        .setTooltip(new TranslatableText("sspb.options.onlyaffectpathblocks.tooltip"))
+                        .setControl(TickBoxControl::new)
+                        .setBinding((opts, value) -> opts.onlyAffectPathBlocks = value, opts -> opts.onlyAffectPathBlocks)
+                        .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                        .build())
+                .build());
 
         return new OptionPage(new TranslatableText("sspb.pages.sspb_page.name"), ImmutableList.copyOf(groups));
     }
