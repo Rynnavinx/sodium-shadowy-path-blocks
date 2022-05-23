@@ -9,6 +9,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -91,7 +92,7 @@ public class SSPBGameOptions {
             throw new IOException("Not a directory: " + dir);
         }
 
-        Files.writeString(this.configPath, GSON.toJson(this));
+        Files.write(this.configPath, GSON.toJson(this).getBytes(StandardCharsets.UTF_8));
     }
 
 }
