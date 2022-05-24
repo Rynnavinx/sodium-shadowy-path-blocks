@@ -23,16 +23,19 @@ public class SSPBGameOptions {
             .create();
     private Path configPath;
 
-    public int shadowynessPercent;
+    public int shadowynessPercent; // only used so the slider in the options can display the value as a proper percentage
     private float shadowyness;
     private float shadowynessCompliment;
 
+    public boolean onlyAffectPathBlocks;
+
 
     public SSPBGameOptions(){
-        shadowynessPercent = 85; // only used for display in the options menu
-
+        shadowynessPercent = 85;
         shadowyness = 0.85f;
         shadowynessCompliment = 0.15f;
+
+        onlyAffectPathBlocks = false;
     }
 
     public void updateShadowyness(int shadowynessPercent){

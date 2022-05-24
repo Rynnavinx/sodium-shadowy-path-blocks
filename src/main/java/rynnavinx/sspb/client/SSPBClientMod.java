@@ -4,8 +4,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import rynnavinx.sspb.client.gui.SSPBGameOptions;
 import rynnavinx.sspb.reflection.ReflectionAoFaceData;
@@ -15,7 +15,7 @@ import rynnavinx.sspb.reflection.ReflectionSmoothLightPipeline;
 @Environment(EnvType.CLIENT)
 public class SSPBClientMod implements ClientModInitializer {
 
-	public static final Logger LOGGER = LogManager.getLogger("SSPB");
+	public static final Logger LOGGER = LoggerFactory.getLogger("SSPB");
 	private static SSPBGameOptions CONFIG;
 
 

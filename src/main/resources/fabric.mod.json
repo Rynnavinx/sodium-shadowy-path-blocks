@@ -35,19 +35,17 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.12.0",
+    "fabricloader": ">=0.12.10",
     "java": ">=16",
 
     "sodium": [
       "0.3.x",
-      "0.4.0-alpha5",
-      "0.4.0-alpha6",
-      "0.4.1"
+      "0.4.x"
     ]
   },
 
   "suggests": {
-    "reeses-sodium-options": ">=1.2.3"
+    "reeses-sodium-options": "*"
   },
 
   "conflicts": {
