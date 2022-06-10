@@ -7,10 +7,8 @@
   ],
   "client": [
     "sodium.MixinSmoothLightPipeline",
-    "sodium.MixinSodiumOptionsGUI",
-    "reeses_sodium_options.MixinSodiumVideoOptionsScreen"
+    "sodium.MixinSodiumOptionsGUI"
   ],
-  "plugin": "rynnavinx.sspb.mixin.SSPBMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }
