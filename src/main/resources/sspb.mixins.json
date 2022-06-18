@@ -2,15 +2,13 @@
   "required": true,
   "minVersion": "0.8",
   "package": "rynnavinx.sspb.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
     "sodium.MixinSmoothLightPipeline",
-    "sodium.MixinSodiumOptionsGUI",
-    "reeses_sodium_options.MixinSodiumVideoOptionsScreen"
+    "sodium.MixinSodiumOptionsGUI"
   ],
-  "plugin": "rynnavinx.sspb.mixin.SSPBMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }
