@@ -39,12 +39,8 @@
     "java": ">=17",
 
     "sodium": [
-      ">=0.4.2"
+      ">=0.4.3"
     ]
-  },
-
-  "suggests": {
-    "reeses-sodium-options": "*"
   },
 
   "conflicts": {
