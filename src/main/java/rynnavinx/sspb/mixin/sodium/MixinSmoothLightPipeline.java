@@ -142,12 +142,6 @@ public class MixinSmoothLightPipeline {
 		out.lm[i] = getLightMapCoord(sl, bl);
 	}
 
-//	@Redirect(method = "applyComplex", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/model/quad/properties/ModelQuadFlags;contains(II)Z"))
-//	private boolean setOffsetFieldAndReturn(int flags, int mask){
-//		this.offset = ModelQuadFlags.contains(flags, mask);
-//		return this.offset;
-//	}
-
 	@Inject(method = "calculate", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyNonParallelFace(Lme/jellysquid/mods/sodium/client/model/light/smooth/AoNeighborInfo;Lme/jellysquid/mods/sodium/client/model/quad/ModelQuadView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;Lme/jellysquid/mods/sodium/client/model/light/data/QuadLightData;)V"))
 	private void setOffsetField(ModelQuadView quad, BlockPos pos, QuadLightData out, Direction cullFace, Direction face, boolean shade, CallbackInfo ci){
 		this.offset = ModelQuadFlags.contains(quad.getFlags(), ModelQuadFlags.IS_ALIGNED);
