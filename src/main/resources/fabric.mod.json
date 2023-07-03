@@ -23,13 +23,6 @@
       "rynnavinx.sspb.client.SSPBClientMod"
     ]
   },
-  "custom": {
-    "modmenu": {
-      "parent": {
-        "id": "sodium"
-      }
-    }
-  },
   "mixins": [
     "sspb.mixins.json"
   ],
