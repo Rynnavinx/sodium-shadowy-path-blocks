@@ -6,6 +6,7 @@
   "mixins": [
   ],
   "client": [
+    "indium.MixinAoCalculator",
     "sodium.MixinSmoothLightPipeline",
     "sodium.MixinSodiumOptionsGUI"
   ],
