@@ -59,14 +59,13 @@ public class MixinModelLoader {
      * so I'm injecting like this for compatibility reasons.
      */
 
-    @Dynamic
     @Inject(method = "upload", at = @At(value = "INVOKE", target = "Ljava/util/Set;forEach(Ljava/util/function/Consumer;)V", shift = At.Shift.AFTER), require = 0)
     private void wrapDirtPathModelPre1_19_3(TextureManager textureManager, Profiler profiler, CallbackInfoReturnable<SpriteAtlasManager> cir){
         wrapDirtPathModel();
     }
 
     // Using intermediary name because the yarn mapped name "bake" is a separate method pre-1.19.3, which led to issues injecting
-    @Dynamic
+    @SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"}) // Suppress because the method is not in this project's MC version. Compiler still complains though...
     @Inject(method = "method_45876(Ljava/util/function/BiFunction;)V", at = @At(value = "INVOKE", target = "Ljava/util/Set;forEach(Ljava/util/function/Consumer;)V", shift = At.Shift.AFTER), require = 0)
     private void wrapDirtPathModel1_19_3(BiFunction<Identifier, SpriteIdentifier, Sprite> spriteLoader, CallbackInfo ci){
         wrapDirtPathModel();

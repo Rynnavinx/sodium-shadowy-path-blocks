@@ -34,9 +34,5 @@
     "sodium": [
       ">=0.4.3"
     ]
-  },
-
-  "conflicts": {
-    "lambdabettergrass": "*"
   }
 }
