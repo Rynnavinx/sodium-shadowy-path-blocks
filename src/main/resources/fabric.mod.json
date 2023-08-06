@@ -34,5 +34,10 @@
     "sodium": [
       ">=0.4.3"
     ]
+  },
+
+  "suggests": {
+    "indium": "*",
+    "fabric-api": "*"
   }
 }
