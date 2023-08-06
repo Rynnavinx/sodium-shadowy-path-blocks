@@ -51,7 +51,8 @@ public class MixinModelLoader {
             }
         }
         else{
-            LOGGER.warn("[SSPB] Dirt Path model was not found");
+            SSPBGameOptionPages.setVanillaPathBlockLightingOptEnabled(false);
+            LOGGER.error("[SSPB] Something went wrong and the dirt path model was not found. Option to toggle vanilla path block lighting is disabled.");
         }
     }
 
