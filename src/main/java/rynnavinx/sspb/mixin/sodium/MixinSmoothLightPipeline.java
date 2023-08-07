@@ -10,6 +10,7 @@ import net.minecraft.block.DirtPathBlock;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -27,15 +28,17 @@ import rynnavinx.sspb.client.SSPBClientMod;
 @Mixin(SmoothLightPipeline.class)
 public class MixinSmoothLightPipeline {
 
+	@Unique
 	private boolean offset;
 
-	@Final @Shadow
+	@Final @Shadow(remap = false)
 	private LightDataAccess lightCache;
 
-	@Shadow
+	@Shadow(remap = false)
 	private static int getLightMapCoord(float sl, float bl) {return 0;}
 
 
+	@Unique
 	private void applyParallelInsetPartialFaceVertex(BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out) throws Exception{
 		Object n1 = ReflectionSmoothLightPipeline.getCachedFaceData.invoke(this, pos, dir, false);
 
@@ -86,6 +89,7 @@ public class MixinSmoothLightPipeline {
 		out.lm[i] = getLightMapCoord(sl, bl);
 	}
 
+	@Unique
 	private void applyNonParallelInsetPartialFaceVertex(BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out, boolean offset) throws Exception{
 		Object n1 = ReflectionSmoothLightPipeline.getCachedFaceData.invoke(this, pos, dir, false);
 

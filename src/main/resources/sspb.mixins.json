@@ -6,9 +6,12 @@
   "mixins": [
   ],
   "client": [
+    "indium.MixinAoCalculator",
+    "minecraft.MixinModelLoader",
     "sodium.MixinSmoothLightPipeline",
     "sodium.MixinSodiumOptionsGUI"
   ],
+  "plugin": "rynnavinx.sspb.mixin.SSPBMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }

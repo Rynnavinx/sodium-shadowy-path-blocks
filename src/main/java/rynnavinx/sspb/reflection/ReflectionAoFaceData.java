@@ -17,7 +17,7 @@ public class ReflectionAoFaceData {
         getBlendedShade = rAoFaceData.getMethod("getBlendedShade", float[].class);
         getBlendedSkyLight = rAoFaceData.getMethod("getBlendedSkyLight", float[].class);
         getBlendedBlockLight = rAoFaceData.getMethod("getBlendedBlockLight", float[].class);
-        hasUnpackedLightData = rAoFaceData.getMethod("hasUnpackedLightData", null);
-        unpackLightData = rAoFaceData.getMethod("unpackLightData", null);
+        hasUnpackedLightData = rAoFaceData.getMethod("hasUnpackedLightData");
+        unpackLightData = rAoFaceData.getMethod("unpackLightData");
     }
 }

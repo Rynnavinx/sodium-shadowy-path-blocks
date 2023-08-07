@@ -29,6 +29,8 @@ public class SSPBGameOptions {
 
     public boolean onlyAffectPathBlocks;
 
+    public boolean vanillaPathBlockLighting;
+
 
     public SSPBGameOptions(){
         shadowynessPercent = 85;
@@ -36,6 +38,8 @@ public class SSPBGameOptions {
         shadowynessCompliment = 0.15f;
 
         onlyAffectPathBlocks = false;
+
+        vanillaPathBlockLighting = false;
     }
 
     public void updateShadowyness(int shadowynessPercent){

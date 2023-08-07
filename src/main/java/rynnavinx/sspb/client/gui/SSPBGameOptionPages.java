@@ -10,6 +10,8 @@ import me.jellysquid.mods.sodium.client.gui.options.control.ControlValueFormatte
 import me.jellysquid.mods.sodium.client.gui.options.control.SliderControl;
 import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
 
+import net.fabricmc.loader.api.FabricLoader;
+
 import net.minecraft.text.Text;
 
 import rynnavinx.sspb.client.gui.options.storage.SSPBOptionsStorage;
@@ -17,10 +19,14 @@ import rynnavinx.sspb.client.gui.options.storage.SSPBOptionsStorage;
 import java.util.ArrayList;
 import java.util.List;
 
+import static rynnavinx.sspb.client.SSPBClientMod.LOGGER;
+
 
 public class SSPBGameOptionPages {
 
     private static final SSPBOptionsStorage sspbOpts = new SSPBOptionsStorage();
+
+    private static boolean vanillaPathBlockLightingOptEnabled = FabricLoader.getInstance().isModLoaded("indium");
 
 
     public static OptionPage sspb() {
@@ -40,8 +46,20 @@ public class SSPBGameOptionPages {
                         .setBinding((opts, value) -> opts.onlyAffectPathBlocks = value, opts -> opts.onlyAffectPathBlocks)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .build())
+                .add(OptionImpl.createBuilder(boolean.class, sspbOpts)
+                        .setName(Text.translatable("sspb.options.vanillapathblocklighting.name"))
+                        .setTooltip(Text.translatable("sspb.options.vanillapathblocklighting.tooltip"))
+                        .setControl(TickBoxControl::new)
+                        .setBinding((opts, value) -> opts.vanillaPathBlockLighting = value, opts -> opts.vanillaPathBlockLighting)
+                        .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
+                        .setEnabled(vanillaPathBlockLightingOptEnabled)
+                        .build())
                 .build());
 
         return new OptionPage(Text.translatable("sspb.pages.sspb_page.name"), ImmutableList.copyOf(groups));
+    }
+
+    public static void setVanillaPathBlockLightingOptEnabled(boolean isEnabled){
+        vanillaPathBlockLightingOptEnabled = isEnabled;
     }
 }
