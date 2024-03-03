@@ -67,7 +67,7 @@ public class MixinSmoothLightPipeline {
 		BlockState blockState = lightCache.getWorld().getBlockState(pos);
 		boolean onlyAffectPathBlocks = SSPBClientMod.options().onlyAffectPathBlocks;
 
-		if((!onlyAffectPathBlocks && blockState.getBlock().isTranslucent(blockState, lightCache.getWorld(), pos)) ||
+		if((!onlyAffectPathBlocks && blockState.isTranslucent(lightCache.getWorld(), pos)) ||
 				(onlyAffectPathBlocks && blockState.getBlock() instanceof DirtPathBlock)){
 
 			// Mix between sodium inset lighting (default applyInsetPartialFace) and vanilla-like inset lighting (applyAlignedPartialFace).
@@ -118,7 +118,7 @@ public class MixinSmoothLightPipeline {
 		BlockState blockState = lightCache.getWorld().getBlockState(pos);
 		boolean onlyAffectPathBlocks = SSPBClientMod.options().onlyAffectPathBlocks;
 
-		if(!onlyAffectPathBlocks && blockState.getBlock().isTranslucent(blockState, lightCache.getWorld(), pos)){
+		if(!onlyAffectPathBlocks && blockState.isTranslucent(lightCache.getWorld(), pos)){
 
 			// Mix between sodium inset lighting (default applyInsetPartialFace) and vanilla-like inset lighting (applyAlignedPartialFace).
 			float shadowyness = SSPBClientMod.options().getShadowyness(); // vanilla-like inset lighting percentage
