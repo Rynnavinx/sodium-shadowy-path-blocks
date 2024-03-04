@@ -1,8 +1,6 @@
 package rynnavinx.sspb.mixin.sodium;
 
 import me.jellysquid.mods.sodium.client.model.light.data.LightDataAccess;
-import me.jellysquid.mods.sodium.client.model.quad.ModelQuadView;
-import me.jellysquid.mods.sodium.client.model.quad.properties.ModelQuadFlags;
 import me.jellysquid.mods.sodium.client.model.light.smooth.SmoothLightPipeline;
 import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
 
@@ -12,14 +10,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.block.BlockState;
 
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import rynnavinx.sspb.reflection.ReflectionAoFaceData;
 import rynnavinx.sspb.reflection.ReflectionSmoothLightPipeline;
 import rynnavinx.sspb.client.SSPBClientMod;
@@ -27,9 +23,6 @@ import rynnavinx.sspb.client.SSPBClientMod;
 
 @Mixin(SmoothLightPipeline.class)
 public class MixinSmoothLightPipeline {
-
-	@Unique
-	private boolean offset;
 
 	@Final @Shadow(remap = false)
 	private LightDataAccess lightCache;
@@ -70,7 +63,7 @@ public class MixinSmoothLightPipeline {
 		if((!onlyAffectPathBlocks && blockState.isTranslucent(lightCache.getWorld(), pos)) ||
 				(onlyAffectPathBlocks && blockState.getBlock() instanceof DirtPathBlock)){
 
-			// Mix between sodium inset lighting (default applyInsetPartialFace) and vanilla-like inset lighting (applyAlignedPartialFace).
+			// Mix between sodium inset lighting (default applyInsetPartialFaceVertex) and vanilla-like inset lighting (applyAlignedPartialFaceVertex).
 			float shadowyness = SSPBClientMod.options().getShadowyness(); // vanilla-like inset lighting percentage
 			float shadowynessCompliment = SSPBClientMod.options().getShadowynessCompliment(); // sodium inset lighting percentage
 
@@ -89,8 +82,9 @@ public class MixinSmoothLightPipeline {
 		out.lm[i] = getLightMapCoord(sl, bl);
 	}
 
+	//Same as parallel one but no instance of dirt path block check
 	@Unique
-	private void applyNonParallelInsetPartialFaceVertex(BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out, boolean offset) throws Exception{
+	private void applyNonParallelInsetPartialFaceVertex(BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out) throws Exception{
 		Object n1 = ReflectionSmoothLightPipeline.getCachedFaceData.invoke(this, pos, dir, false);
 
 		if(!((boolean)ReflectionAoFaceData.hasUnpackedLightData.invoke(n1))){
@@ -120,20 +114,13 @@ public class MixinSmoothLightPipeline {
 
 		if(!onlyAffectPathBlocks && blockState.isTranslucent(lightCache.getWorld(), pos)){
 
-			// Mix between sodium inset lighting (default applyInsetPartialFace) and vanilla-like inset lighting (applyAlignedPartialFace).
+			// Mix between sodium inset lighting (default applyInsetPartialFaceVertex) and vanilla-like inset lighting (applyAlignedPartialFaceVertex).
 			float shadowyness = SSPBClientMod.options().getShadowyness(); // vanilla-like inset lighting percentage
 			float shadowynessCompliment = SSPBClientMod.options().getShadowynessCompliment(); // sodium inset lighting percentage
 
-			if(offset){
-				ao = (((ao1 * n1d) + (ao2 * n2d)) * shadowynessCompliment) + (ao2 * shadowyness);
-				sl = (((sl1 * n1d) + (sl2 * n2d)) * shadowynessCompliment) + (sl2 * shadowyness);
-				bl = (((bl1 * n1d) + (bl2 * n2d)) * shadowynessCompliment) + (bl2 * shadowyness);
-			}
-			else{
-				ao = (((ao1 * n1d) + (ao2 * n2d)) * shadowynessCompliment) + (ao1 * shadowyness);
-				sl = (((sl1 * n1d) + (sl2 * n2d)) * shadowynessCompliment) + (sl1 * shadowyness);
-				bl = (((bl1 * n1d) + (bl2 * n2d)) * shadowynessCompliment) + (bl1 * shadowyness);
-			}
+			ao = (((ao1 * n1d) + (ao2 * n2d)) * shadowynessCompliment) + (ao1 * shadowyness);
+			sl = (((sl1 * n1d) + (sl2 * n2d)) * shadowynessCompliment) + (sl1 * shadowyness);
+			bl = (((bl1 * n1d) + (bl2 * n2d)) * shadowynessCompliment) + (bl1 * shadowyness);
 		}
 		else{
 			// Do not apply this change to fluids or full blocks (to fix custom 3D models having dark insides)
@@ -146,11 +133,6 @@ public class MixinSmoothLightPipeline {
 		out.lm[i] = getLightMapCoord(sl, bl);
 	}
 
-	@Inject(method = "calculate", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyNonParallelFace(Lme/jellysquid/mods/sodium/client/model/light/smooth/AoNeighborInfo;Lme/jellysquid/mods/sodium/client/model/quad/ModelQuadView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;Lme/jellysquid/mods/sodium/client/model/light/data/QuadLightData;)V"))
-	private void setOffsetField(ModelQuadView quad, BlockPos pos, QuadLightData out, Direction cullFace, Direction face, boolean shade, CallbackInfo ci){
-		this.offset = ModelQuadFlags.contains(quad.getFlags(), ModelQuadFlags.IS_ALIGNED);
-	}
-
 	@Redirect(method = "applyParallelFace", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyInsetPartialFaceVertex(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;FF[FILme/jellysquid/mods/sodium/client/model/light/data/QuadLightData;)V"))
 	private void redirectParallelApplyInset(SmoothLightPipeline self, BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out) throws Exception{
 		applyParallelInsetPartialFaceVertex(pos, dir, n1d, n2d, w, i, out);
@@ -158,6 +140,6 @@ public class MixinSmoothLightPipeline {
 
 	@Redirect(method = "applyNonParallelFace", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyInsetPartialFaceVertex(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;FF[FILme/jellysquid/mods/sodium/client/model/light/data/QuadLightData;)V"))
 	private void redirectNonParallelApplyInset(SmoothLightPipeline self, BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out) throws Exception{
-		applyNonParallelInsetPartialFaceVertex(pos, dir, n1d, n2d, w, i, out, this.offset);
+		applyNonParallelInsetPartialFaceVertex(pos, dir, n1d, n2d, w, i, out);
 	}
 }
