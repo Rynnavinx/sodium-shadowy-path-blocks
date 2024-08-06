@@ -16,13 +16,15 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirtPathBlock;
 
-import rynnavinx.sspb.reflection.ReflectionAoFaceData;
-import rynnavinx.sspb.reflection.ReflectionSmoothLightPipeline;
 import rynnavinx.sspb.client.SSPBClientMod;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 
 
 @Mixin(SmoothLightPipeline.class)
-public class MixinSmoothLightPipeline {
+public abstract class MixinSmoothLightPipeline {
 
 	@Final @Shadow(remap = false)
 	private LightDataAccess lightCache;
@@ -30,28 +32,51 @@ public class MixinSmoothLightPipeline {
 	@Shadow(remap = false)
 	private static int getLightMapCoord(float sl, float bl) {return 0;}
 
+	@Unique
+	private static final MethodHandle getCachedFaceData;
+
+	static {
+		try {
+			MethodHandles.Lookup lookup = MethodHandles.lookup();
+			Class<?> aoFaceDataClass = Class.forName("me.jellysquid.mods.sodium.client.model.light.smooth.AoFaceData");
+
+			getCachedFaceData = lookup.findVirtual(SmoothLightPipeline.class, "getCachedFaceData", MethodType.methodType(aoFaceDataClass, BlockPos.class, Direction.class, boolean.class));
+		} catch (NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	@Unique
-	private void applyParallelInsetPartialFaceVertex(BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out) throws Exception{
-		Object n1 = ReflectionSmoothLightPipeline.getCachedFaceData.invoke(this, pos, dir, false);
+	private AoFaceDataAccessor sspb$getCachedFaceData(BlockPos pos, Direction dir, boolean isSecond){
+		try {
+			return (AoFaceDataAccessor) getCachedFaceData.invoke((SmoothLightPipeline) (Object) this, pos, dir, isSecond);
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-		if(!((boolean)ReflectionAoFaceData.hasUnpackedLightData.invoke(n1))){
-			ReflectionAoFaceData.unpackLightData.invoke(n1);
+
+	@Unique
+	private void sspb$applyParallelInsetPartialFaceVertex(BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out){
+		AoFaceDataAccessor n1 = sspb$getCachedFaceData(pos, dir, false);
+
+		if(!n1.invokeHasUnpackedLightData()){
+			n1.invokeUnpackLightData();
 		}
 
-		Object n2 = ReflectionSmoothLightPipeline.getCachedFaceData.invoke(this, pos, dir, true);
+		AoFaceDataAccessor n2 = sspb$getCachedFaceData(pos, dir, true);
 
-		if(!((boolean)ReflectionAoFaceData.hasUnpackedLightData.invoke(n2))){
-			ReflectionAoFaceData.unpackLightData.invoke(n2);
+		if(!n2.invokeHasUnpackedLightData()){
+			n2.invokeUnpackLightData();
 		}
 
-		float ao1 = (float)ReflectionAoFaceData.getBlendedShade.invoke(n1, w);
-		float sl1 = (float)ReflectionAoFaceData.getBlendedSkyLight.invoke(n1, w);
-		float bl1 = (float)ReflectionAoFaceData.getBlendedBlockLight.invoke(n1, w);
+		float ao1 = n1.invokeGetBlendedShade(w);
+		float sl1 = n1.invokeGetBlendedSkyLight(w);
+		float bl1 = n1.invokeGetBlendedBlockLight(w);
 
-		float ao2 = (float)ReflectionAoFaceData.getBlendedShade.invoke(n2, w);
-		float sl2 = (float)ReflectionAoFaceData.getBlendedSkyLight.invoke(n2, w);
-		float bl2 = (float)ReflectionAoFaceData.getBlendedBlockLight.invoke(n2, w);
+		float ao2 = n2.invokeGetBlendedShade(w);
+		float sl2 = n2.invokeGetBlendedSkyLight(w);
+		float bl2 = n2.invokeGetBlendedBlockLight(w);
 
 		float ao;
 		float sl;
@@ -84,26 +109,26 @@ public class MixinSmoothLightPipeline {
 
 	//Same as parallel one but no instance of dirt path block check
 	@Unique
-	private void applyNonParallelInsetPartialFaceVertex(BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out) throws Exception{
-		Object n1 = ReflectionSmoothLightPipeline.getCachedFaceData.invoke(this, pos, dir, false);
+	private void sspb$applyNonParallelInsetPartialFaceVertex(BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out){
+		AoFaceDataAccessor n1 = sspb$getCachedFaceData(pos, dir, false);
 
-		if(!((boolean)ReflectionAoFaceData.hasUnpackedLightData.invoke(n1))){
-			ReflectionAoFaceData.unpackLightData.invoke(n1);
+		if(!n1.invokeHasUnpackedLightData()){
+			n1.invokeUnpackLightData();
 		}
 
-		Object n2 = ReflectionSmoothLightPipeline.getCachedFaceData.invoke(this, pos, dir, true);
+		AoFaceDataAccessor n2 = sspb$getCachedFaceData(pos, dir, true);
 
-		if(!((boolean)ReflectionAoFaceData.hasUnpackedLightData.invoke(n2))){
-			ReflectionAoFaceData.unpackLightData.invoke(n2);
+		if(!n2.invokeHasUnpackedLightData()){
+			n2.invokeUnpackLightData();
 		}
 
-		float ao1 = (float)ReflectionAoFaceData.getBlendedShade.invoke(n1, w);
-		float sl1 = (float)ReflectionAoFaceData.getBlendedSkyLight.invoke(n1, w);
-		float bl1 = (float)ReflectionAoFaceData.getBlendedBlockLight.invoke(n1, w);
+		float ao1 = n1.invokeGetBlendedShade(w);
+		float sl1 = n1.invokeGetBlendedSkyLight(w);
+		float bl1 = n1.invokeGetBlendedBlockLight(w);
 
-		float ao2 = (float)ReflectionAoFaceData.getBlendedShade.invoke(n2, w);
-		float sl2 = (float)ReflectionAoFaceData.getBlendedSkyLight.invoke(n2, w);
-		float bl2 = (float)ReflectionAoFaceData.getBlendedBlockLight.invoke(n2, w);
+		float ao2 = n2.invokeGetBlendedShade(w);
+		float sl2 = n2.invokeGetBlendedSkyLight(w);
+		float bl2 = n2.invokeGetBlendedBlockLight(w);
 
 		float ao;
 		float sl;
@@ -134,12 +159,12 @@ public class MixinSmoothLightPipeline {
 	}
 
 	@Redirect(method = "applyParallelFace", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyInsetPartialFaceVertex(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;FF[FILme/jellysquid/mods/sodium/client/model/light/data/QuadLightData;)V"))
-	private void redirectParallelApplyInset(SmoothLightPipeline self, BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out) throws Exception{
-		applyParallelInsetPartialFaceVertex(pos, dir, n1d, n2d, w, i, out);
+	private void redirectParallelApplyInset(SmoothLightPipeline self, BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out){
+		sspb$applyParallelInsetPartialFaceVertex(pos, dir, n1d, n2d, w, i, out);
 	}
 
 	@Redirect(method = "applyNonParallelFace", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyInsetPartialFaceVertex(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;FF[FILme/jellysquid/mods/sodium/client/model/light/data/QuadLightData;)V"))
-	private void redirectNonParallelApplyInset(SmoothLightPipeline self, BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out) throws Exception{
-		applyNonParallelInsetPartialFaceVertex(pos, dir, n1d, n2d, w, i, out);
+	private void redirectNonParallelApplyInset(SmoothLightPipeline self, BlockPos pos, Direction dir, float n1d, float n2d, float[] w, int i, QuadLightData out){
+		sspb$applyNonParallelInsetPartialFaceVertex(pos, dir, n1d, n2d, w, i, out);
 	}
 }
