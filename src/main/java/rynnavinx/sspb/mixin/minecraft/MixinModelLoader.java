@@ -27,7 +27,7 @@ public class MixinModelLoader {
     private void sspb$wrapDirtPathModel(){
         ModelLoader thisModelLoader = ((ModelLoader)(Object) this);
 
-        ModelIdentifier id = new ModelIdentifier(Identifier.ofVanilla("dirt_path"), "");
+        ModelIdentifier id = new ModelIdentifier(new Identifier("minecraft", "dirt_path"), "");
         BakedModel originalBakedModel = thisModelLoader.getBakedModelMap().get(id);
         if(originalBakedModel != null){
             // wrap if not using frapi
