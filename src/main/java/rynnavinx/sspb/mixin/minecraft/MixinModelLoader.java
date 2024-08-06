@@ -24,7 +24,7 @@ import rynnavinx.sspb.client.render.model.SSPBBakedModel;
 public class MixinModelLoader {
 
     @Unique
-    private void wrapDirtPathModel(){
+    private void sspb$wrapDirtPathModel(){
         ModelLoader thisModelLoader = ((ModelLoader)(Object) this);
 
         ModelIdentifier id = new ModelIdentifier(Identifier.ofVanilla("dirt_path"), "");
@@ -56,18 +56,18 @@ public class MixinModelLoader {
     @Inject(method = "method_18177(Lnet/minecraft/class_1060;Lnet/minecraft/class_3695;)Lnet/minecraft/class_4724;", at = @At(value = "INVOKE", target = "Ljava/util/Set;forEach(Ljava/util/function/Consumer;)V", shift = At.Shift.AFTER), require = 0)
     // Targets the "update" method
     private void wrapDirtPathModel1_19(CallbackInfoReturnable<SpriteAtlasManager> cir){
-        wrapDirtPathModel();
+        sspb$wrapDirtPathModel();
     }
 
     @SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"}) // Suppress because the method is not in this project's MC version. Compiler still complains though...
     @Inject(method = "method_45876(Ljava/util/function/BiFunction;)V", at = @At(value = "INVOKE", target = "Ljava/util/Set;forEach(Ljava/util/function/Consumer;)V", shift = At.Shift.AFTER), require = 0)
     // Targets the "bake" method
     private void wrapDirtPathModel1_19_3(CallbackInfo ci){
-        wrapDirtPathModel();
+        sspb$wrapDirtPathModel();
     }
 
     @Inject(method = "bake(Lnet/minecraft/client/render/model/ModelLoader$SpriteGetter;)V", at = @At(value = "INVOKE", target = "Ljava/util/Map;forEach(Ljava/util/function/BiConsumer;)V", shift = At.Shift.AFTER), require = 0)
     private void wrapDirtPathModel1_21(CallbackInfo ci){
-        wrapDirtPathModel();
+        sspb$wrapDirtPathModel();
     }
 }
