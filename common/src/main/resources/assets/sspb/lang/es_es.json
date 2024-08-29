@@ -1,0 +1,9 @@
+{
+  "sspb.pages.sspb_page.name":"§3SSPB",
+  "sspb.options.shadowyness.name":"Cantidad de Sombreado",
+  "sspb.options.shadowyness.tooltip":"Ajusta la intensidad de las sombras similares en bloques incompletos.\n\n0% ► Valor predeterminado de Sodium.\n85% ► Valor predeterminado de SSPB.\n100% ► Máximo (intensidad igual a la original, pero puede ser más oscura en ciertos casos).\n\nSólo funciona en bloques sin renderizado modificado. No afecta a los bloques de camino cuando está activada la opción 'Usar la Iluminación Original en Bloques de Camino'.",
+  "sspb.options.onlyaffectpathblocks.name":"Afectar solo a los Bloques de Camino",
+  "sspb.options.onlyaffectpathblocks.tooltip":"El error en Minecraft que causa bloques de camino sombreados afecta en realidad a todos los bloques no fluidos he incompletos.\n\nDe forma predeterminada, SSPB aplica la iluminación suave similar a la original a todos los bloques no fluidos he incompletos. Activando esta opción, los efectos se limitarán sólo a los bloques de camino.",
+  "sspb.options.vanillapathblocklighting.name":"Usar la Iluminación Original en Bloques de Camino.",
+  "sspb.options.vanillapathblocklighting.tooltip":"Cuando está activada, la iluminación de los bloques de camino se renderizan con un algoritmo preciso a la versión original, en vez de una versión modificada del algoritmo de iluminación de Sodium.\n\nEsta opción desactiva el control deslizante del sombreado en los bloques de camino.\n\nEsta opción requiere que Indium y Fabric API estén instalados. Además, si tienes un mod que renderiza bloques de camino de forma personalizada (como las texturas conectadas), esta opción seguirá desactivada, aunque el efecto permanezaca activado."
+}
