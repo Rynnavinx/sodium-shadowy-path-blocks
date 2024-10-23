@@ -2,5 +2,5 @@ plugins {
     // see https://fabricmc.net/develop/ for new versions
     id 'fabric-loom' version '1.8-SNAPSHOT' apply false
     // see https://projects.neoforged.net/neoforged/neogradle for new versions
-    id 'net.neoforged.gradle.userdev' version '1.0.21' apply false
+    id 'net.neoforged.moddev' version '1.0.21' apply false
 }
