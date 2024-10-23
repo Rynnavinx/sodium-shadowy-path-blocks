@@ -1,6 +1,6 @@
 plugins {
     id 'multiloader-loader'
-    id 'net.neoforged.gradle.userdev'
+    id 'net.neoforged.moddev'
 }
 
 neoForge {
