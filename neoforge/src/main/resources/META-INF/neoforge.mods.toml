@@ -17,9 +17,6 @@ description = '''${description}''' #mandatory (Supports multiline text)
 config = "${mod_id}.mixins.json"
 
 [[mixins]]
-config = "${mod_id}.forgeneoforge.mixins.json"
-
-[[mixins]]
 config = "${mod_id}.neoforge.mixins.json"
 
 [[dependencies.${mod_id}]]

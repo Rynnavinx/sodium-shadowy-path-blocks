@@ -57,7 +57,7 @@ import java.lang.reflect.Method;
 import java.util.BitSet;
 
 
-@Mixin(value = SmoothLightPipeline.class, remap = false)
+@Mixin(value = SmoothLightPipeline.class)
 public abstract class SmoothLightPipelineMixin {
 
 	@Final @Shadow(remap = false)
