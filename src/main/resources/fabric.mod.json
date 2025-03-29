@@ -37,12 +37,13 @@
 
   "depends": {
     "fabricloader": ">=0.12.10",
-    "java": ">=17",
-    "sodium": ">=0.4.3 <0.6.0-"
+    "java": ">=17"
   },
 
   "suggests": {
     "indium": "*",
-    "fabric-api": "*"
+    "fabric-api": "*",
+    "sodium": ">=0.4.3 <0.6.0-",
+    "embedium": "*"
   }
 }
