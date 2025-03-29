@@ -22,7 +22,7 @@ config = "${mod_id}.neoforge.mixins.json"
 [[dependencies.${mod_id}]]
 modId = "sodium"
 type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[0.6.0-alpha.3,)"
+versionRange = "[0.6.11,)"
 ordering = "NONE"
 side = "CLIENT"
 
