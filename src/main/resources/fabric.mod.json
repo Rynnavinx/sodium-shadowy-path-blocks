@@ -43,7 +43,6 @@
   "suggests": {
     "indium": "*",
     "fabric-api": "*",
-    "sodium": ">=0.4.3 <0.6.0-",
-    "embedium": "*"
+    "sodium": ">=0.4.3 <0.6.0-"
   }
 }
