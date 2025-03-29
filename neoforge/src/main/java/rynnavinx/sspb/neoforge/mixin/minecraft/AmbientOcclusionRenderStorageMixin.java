@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 
-@Mixin(ModelBlockRenderer.AmbientOcclusionFace.class)
-public abstract class AmbientOcclusionFaceMixin {
+@Mixin(ModelBlockRenderer.AmbientOcclusionRenderStorage.class)
+public abstract class AmbientOcclusionRenderStorageMixin {
 
     // NeoForge patches Minecraft's calculate method by removing calls to move() on the result of the 5th, 6th, 7th, and 8th calls to setWithOffset()
     // This mixin just calls move() on those, effectively undoing that patch, which fixes vanilla lighting for path blocks.

@@ -32,9 +32,7 @@ import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.DirtPathBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.spongepowered.asm.mixin.Final;
@@ -47,14 +45,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import rynnavinx.sspb.common.client.SSPBClientMod;
-import rynnavinx.sspb.common.client.render.frapi.aocalc.VanillaAoHelper;
-import rynnavinx.sspb.common.client.util.MethodSignature;
-import rynnavinx.sspb.common.mixin.minecraft.AmbientOcclusionFaceAccessor;
-
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Method;
-import java.util.BitSet;
+import rynnavinx.sspb.common.mixin.minecraft.ModelBlockRendererAccessor;
 
 
 @Mixin(value = SmoothLightPipeline.class)
@@ -63,76 +54,76 @@ public abstract class SmoothLightPipelineMixin {
 	@Final @Shadow(remap = false)
 	private LightDataAccess lightCache;
 
-	@Unique
-	private static final MethodSignature[] sspb$propagatesSkylightDownMethodSignatures = {
-			// Different mappings are used depending on loader and if the game is run in a dev environment or not
-			// The equivalent mojmap and yarn intermediary method signatures MUST be given in the same order
-
-			// Mojmap:
-			new MethodSignature("propagatesSkylightDown", new Class[]{BlockGetter.class, BlockPos.class}), // 1.20.1+ method signature
-			new MethodSignature("propagatesSkylightDown", new Class[]{}), // 1.21.2+ method signature
-
-			// Yarn Intermediary:
-			new MethodSignature("method_26167", new Class[]{BlockGetter.class, BlockPos.class}), // 1.20.1+ method signature
-			new MethodSignature("method_26167", new Class[]{}) // 1.21.2+ method signature
-	};
-
-	@Unique
-	private static MethodHandle sspb$propagatesSkylightDownHandle = null;
-
-	@Unique
-	private static int sspb$propagatesSkylightDownVersion = -1;
-
-
-	static {
-		MethodHandles.Lookup lookup = MethodHandles.lookup();
-
-		// Set method handle for propagatesSkyLightDown - searches for the method, as the signature is different across versions
-		Method[] blockStateMethods = BlockState.class.getMethods();
-		outerLoop:
-		for(int i = 0; i < sspb$propagatesSkylightDownMethodSignatures.length; ++i){
-			for(Method method : blockStateMethods) {
-				if(sspb$propagatesSkylightDownMethodSignatures[i].equals(MethodSignature.fromMethod(method))) {
-					try {
-						sspb$propagatesSkylightDownHandle = lookup.unreflect(method);
-					} catch (IllegalAccessException e) {
-						throw new RuntimeException(e);
-					}
-
-					// Modulus on i, so that sspb$propagatesSkylightDownVersion is set to the same value regardless of mojmap or yarn intermediary
-					sspb$propagatesSkylightDownVersion = i % (sspb$propagatesSkylightDownMethodSignatures.length / 2);
-
-					break outerLoop;
-				}
-			}
-		}
-
-		if(sspb$propagatesSkylightDownHandle == null){
-			throw new RuntimeException("\"propagatesSkylightDown\" method not found.");
-		}
-	}
-
-
-	@Unique
-	private boolean sspb$propagatesSkylightDown(BlockBehaviour.BlockStateBase blockStateBase, BlockGetter level, BlockPos pos){
-		try {
-			if(sspb$propagatesSkylightDownVersion == 0){
-				return (boolean) sspb$propagatesSkylightDownHandle.invoke(blockStateBase, level, pos);
-			}
-			else{
-				return (boolean) sspb$propagatesSkylightDownHandle.invoke(blockStateBase);
-			}
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	@Unique
+//	private static final MethodSignature[] sspb$propagatesSkylightDownMethodSignatures = {
+//			// Different mappings are used depending on loader and if the game is run in a dev environment or not
+//			// The equivalent mojmap and yarn intermediary method signatures MUST be given in the same order
+//
+//			// Mojmap:
+//			new MethodSignature("propagatesSkylightDown", new Class[]{BlockGetter.class, BlockPos.class}), // 1.20.1+ method signature
+//			new MethodSignature("propagatesSkylightDown", new Class[]{}), // 1.21.2+ method signature
+//
+//			// Yarn Intermediary:
+//			new MethodSignature("method_26167", new Class[]{BlockGetter.class, BlockPos.class}), // 1.20.1+ method signature
+//			new MethodSignature("method_26167", new Class[]{}) // 1.21.2+ method signature
+//	};
+//
+//	@Unique
+//	private static MethodHandle sspb$propagatesSkylightDownHandle = null;
+//
+//	@Unique
+//	private static int sspb$propagatesSkylightDownVersion = -1;
+//
+//
+//	static {
+//		MethodHandles.Lookup lookup = MethodHandles.lookup();
+//
+//		// Set method handle for propagatesSkyLightDown - searches for the method, as the signature is different across versions
+//		Method[] blockStateMethods = BlockState.class.getMethods();
+//		outerLoop:
+//		for(int i = 0; i < sspb$propagatesSkylightDownMethodSignatures.length; ++i){
+//			for(Method method : blockStateMethods) {
+//				if(sspb$propagatesSkylightDownMethodSignatures[i].equals(MethodSignature.fromMethod(method))) {
+//					try {
+//						sspb$propagatesSkylightDownHandle = lookup.unreflect(method);
+//					} catch (IllegalAccessException e) {
+//						throw new RuntimeException(e);
+//					}
+//
+//					// Modulus on i, so that sspb$propagatesSkylightDownVersion is set to the same value regardless of mojmap or yarn intermediary
+//					sspb$propagatesSkylightDownVersion = i % (sspb$propagatesSkylightDownMethodSignatures.length / 2);
+//
+//					break outerLoop;
+//				}
+//			}
+//		}
+//
+//		if(sspb$propagatesSkylightDownHandle == null){
+//			throw new RuntimeException("\"propagatesSkylightDown\" method not found.");
+//		}
+//	}
+//
+//
+//	@Unique
+//	private boolean sspb$propagatesSkylightDown(BlockBehaviour.BlockStateBase blockStateBase, BlockGetter level, BlockPos pos){
+//		try {
+//			if(sspb$propagatesSkylightDownVersion == 0){
+//				return (boolean) sspb$propagatesSkylightDownHandle.invoke(blockStateBase, level, pos);
+//			}
+//			else{
+//				return (boolean) sspb$propagatesSkylightDownHandle.invoke(blockStateBase);
+//			}
+//		} catch (Throwable e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 
 	@Unique
 	private float sspb$getModifiedAOWeight(float originalWeight, BlockPos pos){
 		BlockState blockState = lightCache.getLevel().getBlockState(pos);
 		boolean onlyAffectPathBlocks = SSPBClientMod.options().onlyAffectPathBlocks;
 
-		if((!onlyAffectPathBlocks && sspb$propagatesSkylightDown(blockState, lightCache.getLevel(), pos)) ||
+		if((!onlyAffectPathBlocks && blockState.propagatesSkylightDown()) ||
 				(onlyAffectPathBlocks && blockState.getBlock() instanceof DirtPathBlock)){
 
 			// Mix between actual and full shadowyness, to mix between fixed sodium lighting and bugged vanilla lighting, respectively
@@ -174,31 +165,25 @@ public abstract class SmoothLightPipelineMixin {
 	 * "Fabric Renderer - Indigo" from "Fabric API".
 	 */
 
-	@Unique
-	private final ModelBlockRenderer.AmbientOcclusionFace sspb$vanillaCalc = new ModelBlockRenderer.AmbientOcclusionFace();
-
 	// These are what vanilla AO calc wants, per its usage in vanilla code
 	// Because this instance is effectively thread-local, we preserve instances
 	// to avoid making a new allocation each call.
 	@Unique
-	private final float[] sspb$vanillaAoData = new float[Direction.values().length * 2];
-	@Unique
-	private final BitSet sspb$vanillaAoControlBits = new BitSet(3);
-	@Unique
 	private final int[] sspb$vertexData = new int[EncodingFormat.QUAD_STRIDE];
+	@Unique
+	private final ModelBlockRenderer.AmbientOcclusionRenderStorage sspb$vanillaCalc = new ModelBlockRenderer.AmbientOcclusionRenderStorage();
 
 
 	@Unique
 	private void sspb$calcVanilla(QuadViewImpl quad, float[] aoDest, int[] lightDest, BlockPos pos, Direction lightFace, boolean shade) {
-		sspb$vanillaAoControlBits.clear();
 		quad.toVanilla(sspb$vertexData, 0);
 
 		BlockAndTintGetter level = lightCache.getLevel();
 
-		VanillaAoHelper.updateShape(level, level.getBlockState(pos), pos, sspb$vertexData, lightFace, sspb$vanillaAoData, sspb$vanillaAoControlBits);
-		sspb$vanillaCalc.calculate(level, level.getBlockState(pos), pos, lightFace, sspb$vanillaAoData, sspb$vanillaAoControlBits, shade);
+		ModelBlockRendererAccessor.sspb$invokeCalculateShape(level, level.getBlockState(pos), pos, sspb$vertexData, lightFace, sspb$vanillaCalc);
+		sspb$vanillaCalc.calculate(level, level.getBlockState(pos), pos, lightFace, shade);
 
-		System.arraycopy(((AmbientOcclusionFaceAccessor) sspb$vanillaCalc).sspb$getBrightness(), 0, aoDest, 0, 4);
-		System.arraycopy(((AmbientOcclusionFaceAccessor) sspb$vanillaCalc).sspb$getLightmap(), 0, lightDest, 0, 4);
+		System.arraycopy(sspb$vanillaCalc.brightness, 0, aoDest, 0, 4);
+		System.arraycopy(sspb$vanillaCalc.lightmap, 0, lightDest, 0, 4);
 	}
 }
