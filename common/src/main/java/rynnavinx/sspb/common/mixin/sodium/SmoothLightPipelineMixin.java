@@ -105,22 +105,29 @@ public abstract class SmoothLightPipelineMixin {
 	// These are what vanilla AO calc wants, per its usage in vanilla code
 	// Because this instance is effectively thread-local, we preserve instances
 	// to avoid making a new allocation each call.
+
+	// Well, it should be thread-local, but pre 1.21.9, it seems this is very occasionally not the case??? (I think?????????)
+	// This could cause a crash when accessing a ThreadLocal cache in ModelBlockRenderer since 1.21.5, because
+	// AmbientOcclusionRenderStorage was changed to get and store the cache instance once on creation, instead of getting
+	// the ThreadLocal instance per usage. I'll just have a ThreadLocal AmbientOcclusionRenderStorage and do that here instead.
 	@Unique
 	private final int[] sspb$vertexData = new int[EncodingFormat.QUAD_STRIDE];
 	@Unique
-	private final ModelBlockRenderer.AmbientOcclusionRenderStorage sspb$vanillaCalc = new ModelBlockRenderer.AmbientOcclusionRenderStorage();
+	private static final ThreadLocal<ModelBlockRenderer.AmbientOcclusionRenderStorage> sspb$vanillaCalc = ThreadLocal.withInitial(ModelBlockRenderer.AmbientOcclusionRenderStorage::new);
 
 
 	@Unique
 	private void sspb$calcVanilla(QuadViewImpl quad, float[] aoDest, int[] lightDest, BlockPos pos, Direction lightFace, boolean shade) {
+		ModelBlockRenderer.AmbientOcclusionRenderStorage vanillaCalc = sspb$vanillaCalc.get();
+
 		quad.toVanilla(sspb$vertexData, 0);
 
 		BlockAndTintGetter level = lightCache.getLevel();
 
-		ModelBlockRendererAccessor.sspb$invokeCalculateShape(level, level.getBlockState(pos), pos, sspb$vertexData, lightFace, sspb$vanillaCalc);
-		sspb$vanillaCalc.calculate(level, level.getBlockState(pos), pos, lightFace, shade);
+		ModelBlockRendererAccessor.sspb$invokeCalculateShape(level, level.getBlockState(pos), pos, sspb$vertexData, lightFace, vanillaCalc);
+		vanillaCalc.calculate(level, level.getBlockState(pos), pos, lightFace, shade);
 
-		System.arraycopy(sspb$vanillaCalc.brightness, 0, aoDest, 0, 4);
-		System.arraycopy(sspb$vanillaCalc.lightmap, 0, lightDest, 0, 4);
+		System.arraycopy(vanillaCalc.brightness, 0, aoDest, 0, 4);
+		System.arraycopy(vanillaCalc.lightmap, 0, lightDest, 0, 4);
 	}
 }
