@@ -13,7 +13,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    modImplementation "maven.modrinth:sodium:${sodium_version}-fabric"
+    modImplementation "net.caffeinemc:sodium-fabric:${sodium_version}"
 }
 
 loom {
@@ -21,9 +21,9 @@ loom {
     if (aw.exists()) {
         accessWidenerPath.set(aw)
     }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
-    }
+//    mixin {
+//        defaultRefmapName.set("${mod_id}.refmap.json")
+//    }
     runs {
         client {
             client()

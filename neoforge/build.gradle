@@ -35,5 +35,5 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 dependencies {
     //modCompileOnly "maven.modrinth:forgified-fabric-api:${fabric_version}"
 
-    implementation "maven.modrinth:sodium:${sodium_version}-neoforge"
+    implementation "net.caffeinemc:sodium-neoforge:${sodium_version}"
 }
