@@ -26,6 +26,9 @@ versionRange = "[0.6.0-alpha.3,)"
 ordering = "NONE"
 side = "CLIENT"
 
+[modproperties.${mod_id}]
+"sodium:config_api_user" = "rynnavinx.sspb.common.client.options.SSPBConfigBuilder"
+
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
 # stop your mod loading on the server for example.
