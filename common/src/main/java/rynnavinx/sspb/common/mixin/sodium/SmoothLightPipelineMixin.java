@@ -25,10 +25,10 @@ import net.caffeinemc.mods.sodium.client.model.light.data.LightDataAccess;
 import net.caffeinemc.mods.sodium.client.model.light.data.QuadLightData;
 import net.caffeinemc.mods.sodium.client.model.light.smooth.SmoothLightPipeline;
 import net.caffeinemc.mods.sodium.client.model.quad.ModelQuadView;
-import net.caffeinemc.mods.sodium.client.render.frapi.mesh.EncodingFormat;
-import net.caffeinemc.mods.sodium.client.render.frapi.mesh.QuadViewImpl;
+import net.caffeinemc.mods.sodium.client.render.model.QuadViewImpl;
 
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -102,16 +102,8 @@ public abstract class SmoothLightPipelineMixin {
 	 * "Fabric Renderer - Indigo" from "Fabric API".
 	 */
 
-	// These are what vanilla AO calc wants, per its usage in vanilla code
-	// Because this instance is effectively thread-local, we preserve instances
-	// to avoid making a new allocation each call.
-
-	// Well, it should be thread-local, but pre 1.21.9, it seems this is very occasionally not the case??? (I think?????????)
-	// This could cause a crash when accessing a ThreadLocal cache in ModelBlockRenderer since 1.21.5, because
-	// AmbientOcclusionRenderStorage was changed to get and store the cache instance once on creation, instead of getting
-	// the ThreadLocal instance per usage. I'll just have a ThreadLocal AmbientOcclusionRenderStorage and do that here instead.
-	@Unique
-	private final int[] sspb$vertexData = new int[EncodingFormat.QUAD_STRIDE];
+	// Keep a ThreadLocal of this to avoid a new allocation every call. The allocation of AmbientOcclusionRenderStorage
+	// itself involves a ThreadLocal.get() as well, so this is probably faster.
 	@Unique
 	private static final ThreadLocal<ModelBlockRenderer.AmbientOcclusionRenderStorage> sspb$vanillaCalc = ThreadLocal.withInitial(ModelBlockRenderer.AmbientOcclusionRenderStorage::new);
 
@@ -120,11 +112,11 @@ public abstract class SmoothLightPipelineMixin {
 	private void sspb$calcVanilla(QuadViewImpl quad, float[] aoDest, int[] lightDest, BlockPos pos, Direction lightFace, boolean shade) {
 		ModelBlockRenderer.AmbientOcclusionRenderStorage vanillaCalc = sspb$vanillaCalc.get();
 
-		quad.toVanilla(sspb$vertexData, 0);
+		BakedQuad vanillaQuad = new BakedQuad(quad.copyPos(0, null), quad.copyPos(1, null), quad.copyPos(2, null), quad.copyPos(3, null), 0, 0, 0, 0, 0, lightFace,null,false,0);
 
 		BlockAndTintGetter level = lightCache.getLevel();
 
-		ModelBlockRendererAccessor.sspb$invokeCalculateShape(level, level.getBlockState(pos), pos, sspb$vertexData, lightFace, vanillaCalc);
+		ModelBlockRendererAccessor.sspb$invokeCalculateShape(level, level.getBlockState(pos), pos, vanillaQuad, vanillaCalc);
 		vanillaCalc.calculate(level, level.getBlockState(pos), pos, lightFace, shade);
 
 		System.arraycopy(vanillaCalc.brightness, 0, aoDest, 0, 4);
