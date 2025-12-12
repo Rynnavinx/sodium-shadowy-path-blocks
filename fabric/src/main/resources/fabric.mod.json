@@ -29,6 +29,9 @@
   "entrypoints": {
     "client": [
       "rynnavinx.sspb.fabric.client.SSPBFabricClientMod"
+    ],
+    "sodium:config_api_user": [
+      "rynnavinx.sspb.common.client.options.SSPBConfigBuilder"
     ]
   },
   "mixins": [

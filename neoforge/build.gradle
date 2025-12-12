@@ -17,7 +17,7 @@ neoForge {
     runs {
         configureEach {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
-            ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
+            ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run options names with fabric
         }
         client {
             client()
@@ -36,4 +36,5 @@ dependencies {
     //modCompileOnly "maven.modrinth:forgified-fabric-api:${fabric_version}"
 
     implementation "net.caffeinemc:sodium-neoforge:${sodium_version}"
+    implementation "net.caffeinemc:sodium-neoforge-api:${sodium_version}"
 }
