@@ -37,4 +37,4 @@ plugins {
 rootProject.name = 'sodium-shadowy-path-blocks'
 include('common')
 include('fabric')
-//include('neoforge')
+include('neoforge')
