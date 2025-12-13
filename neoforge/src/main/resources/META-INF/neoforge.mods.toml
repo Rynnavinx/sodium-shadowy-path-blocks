@@ -22,14 +22,14 @@ config = "${mod_id}.neoforge.mixins.json"
 [[dependencies.${mod_id}]]
 modId = "sodium"
 type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[0.6.11,)"
+versionRange = "[0.8.0,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
 type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[1.21.5,)"
+versionRange = "[1.21.11,)"
 ordering = "NONE"
 side = "BOTH"
 
