@@ -25,7 +25,7 @@ public class SSPBOptions {
     private Path configPath;
 
     public static final int DEFAULT_SHADOWYNESS_PERCENT = 85;
-    public static final boolean DEFAULT_ONLY_AFFECT_PATH_BLOCKS = true;
+    public static final boolean DEFAULT_ONLY_AFFECT_PATH_BLOCKS = false;
     public static final boolean DEFAULT_VANILLA_PATH_BLOCK_LIGHTING = false;
 
     public int shadowynessPercent; // only used so the slider in the options can display the value as a proper percentage
