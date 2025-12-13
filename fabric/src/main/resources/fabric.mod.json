@@ -14,7 +14,7 @@
   },
 
   "license": "${license}",
-  "icon": "assets/${mod_id}/icon.png",
+  "icon": "assets/${mod_id}/textures/icon.png",
 
   "custom": {
     "modmenu": {
