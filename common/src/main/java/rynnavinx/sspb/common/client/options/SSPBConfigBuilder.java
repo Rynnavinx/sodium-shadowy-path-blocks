@@ -20,9 +20,9 @@ public class SSPBConfigBuilder implements ConfigEntryPoint {
     public void registerConfigLate(ConfigBuilder configBuilder) {
         configBuilder.registerOwnModOptions()
                 .setColorTheme(configBuilder.createColorTheme()
-                        .setBaseThemeRGB(0xFFFFFFFF)
+                        .setBaseThemeRGB(0xffcc9900)
                 )
-                .setIcon(Identifier.parse("sspb:icon.png"))
+                .setIcon(Identifier.parse("sspb:textures/config-icon.png"))
                 .addPage(configBuilder.createOptionPage()
                         .setName(Component.translatable("sspb.pages.sspb_page.name"))
                         .addOption(configBuilder.createIntegerOption(Identifier.parse("sspb:shadowyness"))
