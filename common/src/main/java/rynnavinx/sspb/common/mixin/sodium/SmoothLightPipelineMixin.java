@@ -35,6 +35,8 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
+import org.joml.Vector3f;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -90,8 +92,8 @@ public abstract class SmoothLightPipelineMixin {
 
 	@Inject(method = "calculate", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyParallelFace(Lnet/caffeinemc/mods/sodium/client/model/light/smooth/AoNeighborInfo;Lnet/caffeinemc/mods/sodium/client/model/quad/ModelQuadView;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/caffeinemc/mods/sodium/client/model/light/data/QuadLightData;Z)V", shift = At.Shift.BEFORE), cancellable = true)
 	private void injectVanillaAoCalcForPathBlocks(ModelQuadView quad, BlockPos pos, QuadLightData out, Direction cullFace, Direction lightFace, boolean shade, boolean isFluid, CallbackInfo ci){
-		if(SSPBClientMod.options().vanillaPathBlockLighting && lightCache.getLevel().getBlockState(pos).getBlock() instanceof DirtPathBlock){
-			sspb$calcVanilla((QuadViewImpl) quad, out.br, out.lm, pos, lightFace, shade);
+		if(SSPBClientMod.options().vanillaPathBlockLighting && lightCache.getLevel().getBlockState(pos).getBlock() instanceof DirtPathBlock && lightFace == Direction.UP){
+			sspb$calcVanilla((QuadViewImpl) quad, out.br, out.lm, pos, shade);
 			ci.cancel();
 		}
 	}
@@ -102,24 +104,30 @@ public abstract class SmoothLightPipelineMixin {
 	 * "Fabric Renderer - Indigo" from "Fabric API".
 	 */
 
-	// Keep a ThreadLocal of this to avoid a new allocation every call. The allocation of AmbientOcclusionRenderStorage
-	// itself involves a ThreadLocal.get() as well, so this is probably faster.
+	// These are what vanilla AO calc wants, per its usage in vanilla code
+	// Because this instance is effectively thread-local, we preserve instances
+	// to avoid making a new allocation each call.
+
+	// The only values in BakedQuad needed here are the 4 positions and direction. The rest go unused for this purpose.
 	@Unique
-	private static final ThreadLocal<ModelBlockRenderer.AmbientOcclusionRenderStorage> sspb$vanillaCalc = ThreadLocal.withInitial(ModelBlockRenderer.AmbientOcclusionRenderStorage::new);
+	private final BakedQuad sspb$vanillaQuad = new BakedQuad(new Vector3f(), new Vector3f(), new Vector3f(), new Vector3f(), 0, 0, 0, 0, 0, Direction.UP, null, false, 0);
+	@Unique
+	private final ModelBlockRenderer.AmbientOcclusionRenderStorage sspb$vanillaCalc = new ModelBlockRenderer.AmbientOcclusionRenderStorage();
 
 
 	@Unique
-	private void sspb$calcVanilla(QuadViewImpl quad, float[] aoDest, int[] lightDest, BlockPos pos, Direction lightFace, boolean shade) {
-		ModelBlockRenderer.AmbientOcclusionRenderStorage vanillaCalc = sspb$vanillaCalc.get();
-
-		BakedQuad vanillaQuad = new BakedQuad(quad.copyPos(0, null), quad.copyPos(1, null), quad.copyPos(2, null), quad.copyPos(3, null), 0, 0, 0, 0, 0, lightFace,null,false,0);
+	private void sspb$calcVanilla(QuadViewImpl quad, float[] aoDest, int[] lightDest, BlockPos pos, boolean shade) {
+		quad.copyPos(0, (Vector3f) sspb$vanillaQuad.position0());
+		quad.copyPos(1, (Vector3f) sspb$vanillaQuad.position1());
+		quad.copyPos(2, (Vector3f) sspb$vanillaQuad.position2());
+		quad.copyPos(3, (Vector3f) sspb$vanillaQuad.position3());
 
 		BlockAndTintGetter level = lightCache.getLevel();
 
-		ModelBlockRendererAccessor.sspb$invokeCalculateShape(level, level.getBlockState(pos), pos, vanillaQuad, vanillaCalc);
-		vanillaCalc.calculate(level, level.getBlockState(pos), pos, lightFace, shade);
+		ModelBlockRendererAccessor.sspb$invokeCalculateShape(level, level.getBlockState(pos), pos, sspb$vanillaQuad, sspb$vanillaCalc);
+		sspb$vanillaCalc.calculate(level, level.getBlockState(pos), pos, Direction.UP, shade);
 
-		System.arraycopy(vanillaCalc.brightness, 0, aoDest, 0, 4);
-		System.arraycopy(vanillaCalc.lightmap, 0, lightDest, 0, 4);
+		System.arraycopy(sspb$vanillaCalc.brightness, 0, aoDest, 0, 4);
+		System.arraycopy(sspb$vanillaCalc.lightmap, 0, lightDest, 0, 4);
 	}
 }
