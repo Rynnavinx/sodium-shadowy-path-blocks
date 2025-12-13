@@ -34,6 +34,7 @@ public class SSPBConfigBuilder implements ConfigEntryPoint {
                                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                                 .setStorageHandler(sspbOpts::save)
                                 .setDefaultValue(SSPBOptions.DEFAULT_SHADOWYNESS_PERCENT)
+                                .setEnabledProvider(state -> !(state.readBooleanOption(Identifier.parse("sspb:only_affect_path_blocks")) && state.readBooleanOption(Identifier.parse("sspb:vanilla_path_block_lighting"))), Identifier.parse("sspb:only_affect_path_blocks"), Identifier.parse("sspb:vanilla_path_block_lighting"))
                         )
                         .addOption(configBuilder.createBooleanOption(Identifier.parse("sspb:only_affect_path_blocks"))//Builder(boolean.class, sspbOpts)
                                 .setName(Component.translatable("sspb.options.onlyaffectpathblocks.name"))
