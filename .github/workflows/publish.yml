@@ -1,0 +1,73 @@
+name: publish
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    if: github.repository_owner == 'Rynnavinx'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v6
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v5
+      - name: setup jdk
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+      - name: build
+        run: ./gradlew build
+
+      - name: Upload to GitHub
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          github-token: ${{ secrets.PUBLISH_GITHUB_TOKEN }}
+
+          files: |
+            fabric/build/libs/*.jar
+            neoforge/build/libs/*.jar
+
+      - name: Upload Fabric to Modrinth and CurseForge
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: EIa1eiMm
+          modrinth-token: ${{ secrets.PUBLISH_MODRINTH_TOKEN }}
+
+          curseforge-id: 556408
+          curseforge-token: ${{ secrets.PUBLISH_CURSEFORGE_TOKEN }}
+
+          name: '${{ github.event.release.name }} / Fabric'
+          version: '${{ github.event.release.tag_name }}-fabric'
+          version-type: release
+
+          loaders: |
+            fabric
+            quilt
+
+          dependencies: sodium
+
+          files: fabric/build/libs/!(*-@(dev|sources|javadoc)).jar
+
+      - name: Upload NeoForge to Modrinth and CurseForge
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: EIa1eiMm
+          modrinth-token: ${{ secrets.PUBLISH_MODRINTH_TOKEN }}
+
+          curseforge-id: 556408
+          curseforge-token: ${{ secrets.PUBLISH_CURSEFORGE_TOKEN }}
+
+          name: '${{ github.event.release.name }} / NeoForge'
+          version: '${{ github.event.release.tag_name }}-neoforge'
+          version-type: release
+
+          loaders: neoforge
+
+          dependencies: sodium
+
+          files: neoforge/build/libs/!(*-@(dev|sources|javadoc)).jar
