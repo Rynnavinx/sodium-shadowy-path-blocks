@@ -42,7 +42,7 @@
 
   "depends": {
     "fabricloader": ">=0.16.0",
-    "sodium": ">=0.8.0",
-    "minecraft": ">=1.21.11"
+    "sodium": ">=0.8.7",
+    "minecraft": ">=26.1"
   }
 }

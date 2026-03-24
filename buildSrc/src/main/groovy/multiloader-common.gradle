@@ -8,7 +8,7 @@ base {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
     withSourcesJar()
     // withJavadocJar()
 }
@@ -51,17 +51,6 @@ repositories {
         )
         filter {
             includeGroup("net.caffeinemc")
-        }
-    }
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = "ParchmentMC"
-                url = "https://maven.parchmentmc.org"
-            }
-        }
-        filter {
-            includeGroup("org.parchmentmc.data")
         }
     }
     mavenCentral()
