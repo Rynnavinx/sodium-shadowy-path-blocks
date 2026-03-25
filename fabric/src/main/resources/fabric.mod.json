@@ -38,8 +38,6 @@
     "${mod_id}.mixins.json"
   ],
 
-  "accessWidener" : "${mod_id}.accesswidener",
-
   "depends": {
     "fabricloader": ">=0.16.0",
     "sodium": ">=0.8.7",

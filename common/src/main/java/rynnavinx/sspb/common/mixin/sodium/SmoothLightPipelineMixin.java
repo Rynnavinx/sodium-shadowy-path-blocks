@@ -21,17 +21,20 @@
 
 package rynnavinx.sspb.common.mixin.sodium;
 
+import com.mojang.blaze3d.vertex.QuadInstance;
+
 import net.caffeinemc.mods.sodium.client.model.light.data.LightDataAccess;
 import net.caffeinemc.mods.sodium.client.model.light.data.QuadLightData;
 import net.caffeinemc.mods.sodium.client.model.light.smooth.SmoothLightPipeline;
 import net.caffeinemc.mods.sodium.client.model.quad.ModelQuadView;
 import net.caffeinemc.mods.sodium.client.render.model.QuadViewImpl;
 
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockModelLighter;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -47,7 +50,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import rynnavinx.sspb.common.client.SSPBClientMod;
-import rynnavinx.sspb.common.mixin.minecraft.ModelBlockRendererAccessor;
 
 
 @Mixin(value = SmoothLightPipeline.class)
@@ -92,8 +94,8 @@ public abstract class SmoothLightPipelineMixin {
 
 	@Inject(method = "calculate", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyParallelFace(Lnet/caffeinemc/mods/sodium/client/model/light/smooth/AoNeighborInfo;Lnet/caffeinemc/mods/sodium/client/model/quad/ModelQuadView;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/caffeinemc/mods/sodium/client/model/light/data/QuadLightData;Z)V", shift = At.Shift.BEFORE), cancellable = true)
 	private void injectVanillaAoCalcForPathBlocks(ModelQuadView quad, BlockPos pos, QuadLightData out, Direction cullFace, Direction lightFace, boolean shade, boolean isFluid, CallbackInfo ci){
-		if(SSPBClientMod.options().vanillaPathBlockLighting && lightCache.getLevel().getBlockState(pos).getBlock() instanceof DirtPathBlock && lightFace == Direction.UP){
-			sspb$calcVanilla((QuadViewImpl) quad, out.br, out.lm, pos, shade);
+		if(SSPBClientMod.options().vanillaPathBlockLighting && lightCache.getLevel().getBlockState(pos).getBlock() instanceof DirtPathBlock){
+			sspb$calcVanilla((QuadViewImpl) quad, out.br, out.lm, pos, lightFace, shade);
 			ci.cancel();
 		}
 	}
@@ -107,27 +109,43 @@ public abstract class SmoothLightPipelineMixin {
 	// These are what vanilla AO calc wants, per its usage in vanilla code
 	// Because this instance is effectively thread-local, we preserve instances
 	// to avoid making a new allocation each call.
-
-	// The only values in BakedQuad needed here are the 4 positions and direction. The rest go unused for this purpose.
 	@Unique
-	private final BakedQuad sspb$vanillaQuad = new BakedQuad(new Vector3f(), new Vector3f(), new Vector3f(), new Vector3f(), 0, 0, 0, 0, 0, Direction.UP, null, false, 0);
+	private final BlockModelLighter sspb$vanillaCalc = new BlockModelLighter();
 	@Unique
-	private final ModelBlockRenderer.AmbientOcclusionRenderStorage sspb$vanillaCalc = new ModelBlockRenderer.AmbientOcclusionRenderStorage();
-
+	private final QuadInstance sspb$vanillaQuadInstance = new QuadInstance();
+	@Unique
+	private final Vector3f sspb$vanillaPos0 = new Vector3f();
+	@Unique
+	private final Vector3f sspb$vanillaPos1 = new Vector3f();
+	@Unique
+	private final Vector3f sspb$vanillaPos2 = new Vector3f();
+	@Unique
+	private final Vector3f sspb$vanillaPos3 = new Vector3f();
 
 	@Unique
-	private void sspb$calcVanilla(QuadViewImpl quad, float[] aoDest, int[] lightDest, BlockPos pos, boolean shade) {
-		quad.copyPos(0, (Vector3f) sspb$vanillaQuad.position0());
-		quad.copyPos(1, (Vector3f) sspb$vanillaQuad.position1());
-		quad.copyPos(2, (Vector3f) sspb$vanillaQuad.position2());
-		quad.copyPos(3, (Vector3f) sspb$vanillaQuad.position3());
-
+	private void sspb$calcVanilla(QuadViewImpl quad, float[] aoDest, int[] lightDest, BlockPos pos, Direction lightFace, boolean shade) {
 		BlockAndTintGetter level = lightCache.getLevel();
 
-		ModelBlockRendererAccessor.sspb$invokeCalculateShape(level, level.getBlockState(pos), pos, sspb$vanillaQuad, sspb$vanillaCalc);
-		sspb$vanillaCalc.calculate(level, level.getBlockState(pos), pos, Direction.UP, shade);
+		// calculateShape only uses the vertex positions and light face of the quad, so making a new BakedQuad every
+		// time here is very inefficient, but this is by far the simplest choice. We don't use QuadView.toBakedQuad here
+		// as it requires the sprite to be not null, it's less efficient as it needs to populate all fields correctly,
+		// and it doesn't allow us to reuse Vector3f objects.
+		BakedQuad bakedQuad = new BakedQuad(
+				quad.copyPos(0, sspb$vanillaPos0),
+				quad.copyPos(1, sspb$vanillaPos1),
+				quad.copyPos(2, sspb$vanillaPos2),
+				quad.copyPos(3, sspb$vanillaPos3),
+				0, 0, 0, 0,
+				lightFace,
+				new BakedQuad.MaterialInfo(null, null, null, -1, shade, 0)
+		);
 
-		System.arraycopy(sspb$vanillaCalc.brightness, 0, aoDest, 0, 4);
-		System.arraycopy(sspb$vanillaCalc.lightmap, 0, lightDest, 0, 4);
+		sspb$vanillaCalc.prepareQuadAmbientOcclusion(level, level.getBlockState(pos), pos, bakedQuad, sspb$vanillaQuadInstance);
+
+		for (int i = 0; i < 4; i++) {
+			// the color is expected to be fully gray, so we can pick either one and be fine.
+			aoDest[i] = ARGB.redFloat(sspb$vanillaQuadInstance.getColor(i));
+			lightDest[i] = sspb$vanillaQuadInstance.getLightCoords(i);
+		}
 	}
 }
