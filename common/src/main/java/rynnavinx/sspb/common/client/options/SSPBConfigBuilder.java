@@ -22,7 +22,7 @@ public class SSPBConfigBuilder implements ConfigEntryPoint {
                 .setColorTheme(configBuilder.createColorTheme()
                         .setBaseThemeRGB(0xffcc9900)
                 )
-                .setIcon(Identifier.parse("sspb:textures/config-icon.png"))
+                .setNonTintedIcon(Identifier.parse("sspb:textures/config-icon.png"))
                 .addPage(configBuilder.createOptionPage()
                         .setName(Component.translatable("sspb.pages.sspb_page.name"))
                         .addOption(configBuilder.createIntegerOption(Identifier.parse("sspb:shadowyness"))
