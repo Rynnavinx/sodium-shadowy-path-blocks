@@ -1,9 +1,9 @@
 {
   "sspb.pages.sspb_page.name":"SSPB",
-  "sspb.options.shadowyness.name":"阴影",
-  "sspb.options.shadowyness.tooltip":"调整非完整方块上的原版阴影强度。\n\n0% - 无 (Sodium 默认)\n85% - 默认\n100% - 最大",
-  "sspb.options.onlyaffectpathblocks.name":"仅应用于土径",
-  "sspb.options.onlyaffectpathblocks.tooltip":"原版Minecraft中导致土径的阴影错误实际上会影响所有非流体和非完整方块。\n\n默认情况下，SSPB 也会对所有非流体非完整方块应用类似原版的平滑光照。启用此功能将仅应用在土径。",
-  "sspb.options.vanillapathblocklighting.name":"为土径使用原版光照",
-  "sspb.options.vanillapathblocklighting.tooltip":"启用时，土径的光照将使用原版精度算法进行渲染，而不是 Sodium 的修改版本。\n\n此选项将禁用阴影滑块对土径的效果控制。"
+  "sspb.options.shadowyness.name":"阴影强度",
+  "sspb.options.shadowyness.tooltip":"调整非完整方块上类似于原版的阴影强度。\n\n0% - 无（Sodium 预设值）\n85% - SSPB 预设值\n100% - 最大（原版强度，但在某些情况下可能比原版更暗）\n\n当启用「对土径使用原版光照」时，不会影响土径。",
+  "sspb.options.onlyaffectpathblocks.name":"仅影响土径",
+  "sspb.options.onlyaffectpathblocks.tooltip":"原版 Minecraft 中导致土径阴影的错误实际上会影响所有非流体非完整方块。\n\n预设情况下，SSPB 会将类似于原版的平滑光照应用于所有非流体非完整方块。启用这项选项将仅将效果限制为土径。",
+  "sspb.options.vanillapathblocklighting.name":"对土径使用原版光照",
+  "sspb.options.vanillapathblocklighting.tooltip":"启用后，土径的光照将使用原版精确的演算法进行绘制，而不是修改版的 Sodium 光照演算法。\n\n这项选项会停用阴影强度滑杆对土径的效果。"
 }
