@@ -20,18 +20,25 @@ config = "${mod_id}.mixins.json"
 config = "${mod_id}.neoforge.mixins.json"
 
 [[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
+versionRange = "*"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.${mod_id}]]
 modId = "sodium"
 type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[0.8.0,)"
+versionRange = "[0.8.7,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
 type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[1.21.11,)"
+versionRange = "[26.1,)"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"
 
 [modproperties.${mod_id}]
 "sodium:config_api_user" = "rynnavinx.sspb.common.client.options.SSPBConfigBuilder"
