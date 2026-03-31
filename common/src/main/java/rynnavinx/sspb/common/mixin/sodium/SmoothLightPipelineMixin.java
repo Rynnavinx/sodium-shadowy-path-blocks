@@ -29,8 +29,10 @@ import net.caffeinemc.mods.sodium.client.model.light.smooth.SmoothLightPipeline;
 import net.caffeinemc.mods.sodium.client.model.quad.ModelQuadView;
 import net.caffeinemc.mods.sodium.client.render.model.QuadViewImpl;
 
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.BlockModelLighter;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -93,9 +95,9 @@ public abstract class SmoothLightPipelineMixin {
 	}
 
 	@Inject(method = "calculate", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyParallelFace(Lnet/caffeinemc/mods/sodium/client/model/light/smooth/AoNeighborInfo;Lnet/caffeinemc/mods/sodium/client/model/quad/ModelQuadView;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/caffeinemc/mods/sodium/client/model/light/data/QuadLightData;Z)V", shift = At.Shift.BEFORE), cancellable = true)
-	private void injectVanillaAoCalcForPathBlocks(ModelQuadView quad, BlockPos pos, QuadLightData out, Direction cullFace, Direction lightFace, boolean shade, boolean isFluid, CallbackInfo ci){
+	private void injectVanillaAoCalcForPathBlocks(ModelQuadView quad, BlockPos pos, QuadLightData out, Direction cullFace, Direction lightFace, boolean shade, boolean enhanced, CallbackInfo ci){
 		if(SSPBClientMod.options().vanillaPathBlockLighting && lightCache.getLevel().getBlockState(pos).getBlock() instanceof DirtPathBlock){
-			sspb$calcVanilla((QuadViewImpl) quad, out.br, out.lm, pos, lightFace, shade);
+			sspb$calcVanilla((QuadViewImpl) quad, out.br, out.lm, pos, lightFace);
 			ci.cancel();
 		}
 	}
@@ -109,6 +111,11 @@ public abstract class SmoothLightPipelineMixin {
 	// These are what vanilla AO calc wants, per its usage in vanilla code
 	// Because this instance is effectively thread-local, we preserve instances
 	// to avoid making a new allocation each call.
+
+	// sspb$vanillaMaterialInfo needs to be first, or else sspb$vanillaCalc becomes null for some reason?
+	// not sure what kind of dark magic is causing this
+	@Unique
+	private final BakedQuad.MaterialInfo sspb$vanillaMaterialInfo = new BakedQuad.MaterialInfo(null, ChunkSectionLayer.SOLID, Sheets.cutoutBlockItemSheet(), -1, true, 0);
 	@Unique
 	private final BlockModelLighter sspb$vanillaCalc = new BlockModelLighter();
 	@Unique
@@ -123,7 +130,7 @@ public abstract class SmoothLightPipelineMixin {
 	private final Vector3f sspb$vanillaPos3 = new Vector3f();
 
 	@Unique
-	private void sspb$calcVanilla(QuadViewImpl quad, float[] aoDest, int[] lightDest, BlockPos pos, Direction lightFace, boolean shade) {
+	private void sspb$calcVanilla(QuadViewImpl quad, float[] aoDest, int[] lightDest, BlockPos pos, Direction lightFace) {
 		BlockAndTintGetter level = lightCache.getLevel();
 
 		// calculateShape only uses the vertex positions and light face of the quad, so making a new BakedQuad every
@@ -137,7 +144,7 @@ public abstract class SmoothLightPipelineMixin {
 				quad.copyPos(3, sspb$vanillaPos3),
 				0, 0, 0, 0,
 				lightFace,
-				new BakedQuad.MaterialInfo(null, null, null, -1, shade, 0)
+				sspb$vanillaMaterialInfo
 		);
 
 		sspb$vanillaCalc.prepareQuadAmbientOcclusion(level, level.getBlockState(pos), pos, bakedQuad, sspb$vanillaQuadInstance);
