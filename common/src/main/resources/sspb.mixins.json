@@ -8,7 +8,6 @@
     "minecraft.AmbientOcclusionFaceAccessor",
     "minecraft.ModelBlockRendererAccessor",
     "minecraft.frapi.ModelBlockRendererMixin",
-    "sodium.SodiumOptionsGUIMixin",
     "sodium.SmoothLightPipelineMixin"
   ],
   "injectors": {
