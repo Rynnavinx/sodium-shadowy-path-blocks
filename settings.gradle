@@ -1,35 +1,22 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
-        mavenCentral()
         exclusiveContent {
             forRepository {
                 maven {
-                    name = 'Fabric'
-                    url = uri('https://maven.fabricmc.net')
+                    name = "Fabric"
+                    url = "https://maven.fabricmc.net"
                 }
             }
             filter {
-                includeGroup('net.fabricmc')
-                includeGroup('fabric-loom')
+                includeGroupAndSubgroups("net.fabricmc")
+                includeGroup("net.fabricmc.fabric-loom-remap")
             }
         }
         exclusiveContent {
             forRepository {
                 maven {
-                    name = 'Sponge'
-                    url = uri('https://repo.spongepowered.org/repository/maven-public')
-                }
-            }
-            filter {
-                includeGroupAndSubgroups("org.spongepowered")
-            }
-        }
-        exclusiveContent {
-            forRepository {
-                maven {
-                    name = 'NeoForge'
-                    url = uri("https://maven.neoforged.net/releases")
+                    name = "NeoForge"
+                    url = "https://maven.neoforged.net/releases"
                 }
             }
             filter {
@@ -37,10 +24,8 @@ pluginManagement {
                 includeGroup("codechicken")
             }
         }
-        maven {
-            name = 'ParchmentMC'
-            url = 'https://maven.parchmentmc.org'
-        }
+        gradlePluginPortal()
+        mavenCentral()
     }
 }
 

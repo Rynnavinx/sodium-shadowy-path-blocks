@@ -1,6 +1,6 @@
 plugins {
     id 'multiloader-common'
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom-remap'
 }
 
 loom {
@@ -8,9 +8,9 @@ loom {
     if (aw.exists()) {
         accessWidenerPath.set(aw)
     }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
-    }
+//    mixin {
+//        defaultRefmapName.set("${mod_id}.refmap.json")
+//    }
 }
 
 dependencies {
@@ -20,12 +20,13 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
     }
 
-    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+    compileOnly "net.fabricmc:sponge-mixin:${mixin_version}"
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
-    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
-    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+    compileOnly "io.github.llamalad7:mixinextras-common:${mixin_extras_version}"
+    annotationProcessor "io.github.llamalad7:mixinextras-common:${mixin_extras_version}"
 
-    compileOnly "maven.modrinth:sodium:${sodium_version}-neoforge"
+    modCompileOnly "net.caffeinemc:sodium-fabric:${sodium_version}"
+    modCompileOnly "net.caffeinemc:sodium-fabric-api:${sodium_version}"
 }
 
 configurations {
