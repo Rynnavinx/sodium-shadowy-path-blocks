@@ -29,7 +29,7 @@ side = "CLIENT"
 [[dependencies.${mod_id}]]
 modId = "sodium"
 type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[0.8.12-,)"
+versionRange = "[0.8.12-alpha.2,)"
 ordering = "NONE"
 side = "CLIENT"
 
