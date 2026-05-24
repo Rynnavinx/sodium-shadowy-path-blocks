@@ -63,76 +63,76 @@ public abstract class SmoothLightPipelineMixin {
 	@Final @Shadow(remap = false)
 	private LightDataAccess lightCache;
 
-	@Unique
-	private static final MethodSignature[] sspb$propagatesSkylightDownMethodSignatures = {
-			// Different mappings are used depending on loader and if the game is run in a dev environment or not
-			// The equivalent mojmap and yarn intermediary method signatures MUST be given in the same order
-
-			// Mojmap:
-			new MethodSignature("propagatesSkylightDown", new Class[]{BlockGetter.class, BlockPos.class}), // 1.20.1+ method signature
-			new MethodSignature("propagatesSkylightDown", new Class[]{}), // 1.21.2+ method signature
-
-			// Yarn Intermediary:
-			new MethodSignature("method_26167", new Class[]{BlockGetter.class, BlockPos.class}), // 1.20.1+ method signature
-			new MethodSignature("method_26167", new Class[]{}) // 1.21.2+ method signature
-	};
-
-	@Unique
-	private static MethodHandle sspb$propagatesSkylightDownHandle = null;
-
-	@Unique
-	private static int sspb$propagatesSkylightDownVersion = -1;
-
-
-	static {
-		MethodHandles.Lookup lookup = MethodHandles.lookup();
-
-		// Set method handle for propagatesSkyLightDown - searches for the method, as the signature is different across versions
-		Method[] blockStateMethods = BlockState.class.getMethods();
-		outerLoop:
-		for(int i = 0; i < sspb$propagatesSkylightDownMethodSignatures.length; ++i){
-			for(Method method : blockStateMethods) {
-				if(sspb$propagatesSkylightDownMethodSignatures[i].equals(MethodSignature.fromMethod(method))) {
-					try {
-						sspb$propagatesSkylightDownHandle = lookup.unreflect(method);
-					} catch (IllegalAccessException e) {
-						throw new RuntimeException(e);
-					}
-
-					// Modulus on i, so that sspb$propagatesSkylightDownVersion is set to the same value regardless of mojmap or yarn intermediary
-					sspb$propagatesSkylightDownVersion = i % (sspb$propagatesSkylightDownMethodSignatures.length / 2);
-
-					break outerLoop;
-				}
-			}
-		}
-
-		if(sspb$propagatesSkylightDownHandle == null){
-			throw new RuntimeException("\"propagatesSkylightDown\" method not found.");
-		}
-	}
-
-
-	@Unique
-	private boolean sspb$propagatesSkylightDown(BlockBehaviour.BlockStateBase blockStateBase, BlockGetter level, BlockPos pos){
-		try {
-			if(sspb$propagatesSkylightDownVersion == 0){
-				return (boolean) sspb$propagatesSkylightDownHandle.invoke(blockStateBase, level, pos);
-			}
-			else{
-				return (boolean) sspb$propagatesSkylightDownHandle.invoke(blockStateBase);
-			}
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	@Unique
+//	private static final MethodSignature[] sspb$propagatesSkylightDownMethodSignatures = {
+//			// Different mappings are used depending on loader and if the game is run in a dev environment or not
+//			// The equivalent mojmap and yarn intermediary method signatures MUST be given in the same order
+//
+//			// Mojmap:
+//			new MethodSignature("propagatesSkylightDown", new Class[]{BlockGetter.class, BlockPos.class}), // 1.20.1+ method signature
+//			new MethodSignature("propagatesSkylightDown", new Class[]{}), // 1.21.2+ method signature
+//
+//			// Yarn Intermediary:
+//			new MethodSignature("method_26167", new Class[]{BlockGetter.class, BlockPos.class}), // 1.20.1+ method signature
+//			new MethodSignature("method_26167", new Class[]{}) // 1.21.2+ method signature
+//	};
+//
+//	@Unique
+//	private static MethodHandle sspb$propagatesSkylightDownHandle = null;
+//
+//	@Unique
+//	private static int sspb$propagatesSkylightDownVersion = -1;
+//
+//
+//	static {
+//		MethodHandles.Lookup lookup = MethodHandles.lookup();
+//
+//		// Set method handle for propagatesSkyLightDown - searches for the method, as the signature is different across versions
+//		Method[] blockStateMethods = BlockState.class.getMethods();
+//		outerLoop:
+//		for(int i = 0; i < sspb$propagatesSkylightDownMethodSignatures.length; ++i){
+//			for(Method method : blockStateMethods) {
+//				if(sspb$propagatesSkylightDownMethodSignatures[i].equals(MethodSignature.fromMethod(method))) {
+//					try {
+//						sspb$propagatesSkylightDownHandle = lookup.unreflect(method);
+//					} catch (IllegalAccessException e) {
+//						throw new RuntimeException(e);
+//					}
+//
+//					// Modulus on i, so that sspb$propagatesSkylightDownVersion is set to the same value regardless of mojmap or yarn intermediary
+//					sspb$propagatesSkylightDownVersion = i % (sspb$propagatesSkylightDownMethodSignatures.length / 2);
+//
+//					break outerLoop;
+//				}
+//			}
+//		}
+//
+//		if(sspb$propagatesSkylightDownHandle == null){
+//			throw new RuntimeException("\"propagatesSkylightDown\" method not found.");
+//		}
+//	}
+//
+//
+//	@Unique
+//	private boolean sspb$propagatesSkylightDown(BlockBehaviour.BlockStateBase blockStateBase, BlockGetter level, BlockPos pos){
+//		try {
+//			if(sspb$propagatesSkylightDownVersion == 0){
+//				return (boolean) sspb$propagatesSkylightDownHandle.invoke(blockStateBase, level, pos);
+//			}
+//			else{
+//				return (boolean) sspb$propagatesSkylightDownHandle.invoke(blockStateBase);
+//			}
+//		} catch (Throwable e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 
 	@Unique
 	private float sspb$getModifiedAOWeight(float originalWeight, BlockPos pos){
 		BlockState blockState = lightCache.getLevel().getBlockState(pos);
 		boolean onlyAffectPathBlocks = SSPBClientMod.options().onlyAffectPathBlocks;
 
-		if((!onlyAffectPathBlocks && sspb$propagatesSkylightDown(blockState, lightCache.getLevel(), pos)) ||
+		if((!onlyAffectPathBlocks && blockState.propagatesSkylightDown(lightCache.getLevel(), pos)) ||
 				(onlyAffectPathBlocks && blockState.getBlock() instanceof DirtPathBlock)){
 
 			// Mix between actual and full shadowyness, to mix between fixed sodium lighting and bugged vanilla lighting, respectively
