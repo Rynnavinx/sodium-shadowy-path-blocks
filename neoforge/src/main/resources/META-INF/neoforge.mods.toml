@@ -29,14 +29,14 @@ side = "CLIENT"
 [[dependencies.${mod_id}]]
 modId = "sodium"
 type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[0.8.12-alpha.2,)"
+versionRange = "[0.6.0,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
 type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "1.21.1"
+versionRange = "[1.21,1.21.4]"
 ordering = "NONE"
 side = "CLIENT"
 

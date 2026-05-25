@@ -33,8 +33,8 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    // gotta manually place the mod in the mods folder when running in the dev environment
-    // otherwise it just don't work :(
+    compileOnly "maven.modrinth:sodium:mc1.21.1-0.6.13-neoforge"
+
     compileOnly "net.caffeinemc:sodium-neoforge:${sodium_version}"
     compileOnly "net.caffeinemc:sodium-neoforge-mod:${sodium_version}"
     compileOnly "net.caffeinemc:sodium-neoforge-api:${sodium_version}"

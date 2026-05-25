@@ -25,6 +25,8 @@ dependencies {
     compileOnly "io.github.llamalad7:mixinextras-common:${mixin_extras_version}"
     annotationProcessor "io.github.llamalad7:mixinextras-common:${mixin_extras_version}"
 
+    modCompileOnly "maven.modrinth:sodium:mc1.21.1-0.6.13-fabric"
+
     modCompileOnly "net.caffeinemc:sodium-fabric:${sodium_version}"
     modCompileOnly "net.caffeinemc:sodium-fabric-api:${sodium_version}"
 }
