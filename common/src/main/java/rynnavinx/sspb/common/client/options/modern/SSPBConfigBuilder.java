@@ -1,4 +1,4 @@
-package rynnavinx.sspb.common.client.options;
+package rynnavinx.sspb.common.client.options.modern;
 
 import net.caffeinemc.mods.sodium.api.config.ConfigEntryPoint;
 import net.caffeinemc.mods.sodium.api.config.option.OptionFlag;
@@ -9,8 +9,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import rynnavinx.sspb.common.client.SSPBClientMod;
+import rynnavinx.sspb.common.client.options.SSPBOptions;
 
 
+// Class only loaded when Sodium 0.8.12+ is present, so the mod won't break when Sodium 0.6.x is present
 public class SSPBConfigBuilder implements ConfigEntryPoint {
 
     private static final SSPBOptions sspbOpts = SSPBClientMod.options();

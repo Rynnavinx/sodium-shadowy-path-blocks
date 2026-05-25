@@ -31,7 +31,7 @@
       "rynnavinx.sspb.fabric.client.SSPBFabricClientMod"
     ],
     "sodium:config_api_user": [
-      "rynnavinx.sspb.common.client.options.SSPBConfigBuilder"
+      "rynnavinx.sspb.common.client.options.modern.SSPBConfigBuilder"
     ]
   },
   "mixins": [
