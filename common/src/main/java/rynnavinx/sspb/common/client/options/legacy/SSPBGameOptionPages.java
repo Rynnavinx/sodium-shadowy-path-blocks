@@ -1,4 +1,4 @@
-package rynnavinx.sspb.common.client.gui;
+package rynnavinx.sspb.common.client.options.legacy;
 
 import com.google.common.collect.ImmutableList;
 
@@ -12,7 +12,7 @@ import net.caffeinemc.mods.sodium.client.gui.options.control.TickBoxControl;
 
 import net.minecraft.network.chat.Component;
 
-import rynnavinx.sspb.common.client.gui.options.storage.SSPBOptionsStorage;
+import rynnavinx.sspb.common.client.options.SSPBOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class SSPBGameOptionPages {
                         .setName(Component.translatable("sspb.options.shadowyness.name"))
                         .setTooltip(Component.translatable("sspb.options.shadowyness.tooltip"))
                         .setControl(option -> new SliderControl(option, 0, 100, 1, ControlValueFormatter.percentage()))
-                        .setBinding(SSPBGameOptions::updateShadowyness, opts -> opts.shadowynessPercent)
+                        .setBinding(SSPBOptions::updateShadowyness, opts -> opts.shadowynessPercent)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .build())
                 .add(OptionImpl.createBuilder(boolean.class, sspbOpts)

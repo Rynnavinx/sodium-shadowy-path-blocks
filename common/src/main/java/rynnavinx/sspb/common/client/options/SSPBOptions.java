@@ -1,9 +1,10 @@
-package rynnavinx.sspb.common.client.gui;
+package rynnavinx.sspb.common.client.options;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import rynnavinx.sspb.common.client.SSPBClientMod;
 import rynnavinx.sspb.common.services.IPlatformHelper;
 
 import java.io.FileReader;
@@ -13,15 +14,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 
-public class SSPBGameOptions {
+public class SSPBOptions {
 
     private static final String DEFAULT_FILE_NAME = "sodium-shadowy-path-blocks-options.json";
     private static final Gson GSON = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .setPrettyPrinting()
-            .excludeFieldsWithModifiers(Modifier.PRIVATE)
+            .excludeFieldsWithModifiers(Modifier.PRIVATE, Modifier.STATIC)
             .create();
     private Path configPath;
+
+    public static final int DEFAULT_SHADOWYNESS_PERCENT = 85;
+    public static final boolean DEFAULT_ONLY_AFFECT_PATH_BLOCKS = false;
+    public static final boolean DEFAULT_VANILLA_PATH_BLOCK_LIGHTING = false;
 
     public int shadowynessPercent; // only used so the slider in the options can display the value as a proper percentage
     private float shadowyness;
@@ -32,14 +37,14 @@ public class SSPBGameOptions {
     public boolean vanillaPathBlockLighting;
 
 
-    public SSPBGameOptions(){
-        shadowynessPercent = 85;
+    public SSPBOptions(){
+        shadowynessPercent = DEFAULT_SHADOWYNESS_PERCENT;
         shadowyness = 0.85f;
         shadowynessCompliment = 0.15f;
 
-        onlyAffectPathBlocks = false;
+        onlyAffectPathBlocks = DEFAULT_ONLY_AFFECT_PATH_BLOCKS;
 
-        vanillaPathBlockLighting = false;
+        vanillaPathBlockLighting = DEFAULT_VANILLA_PATH_BLOCK_LIGHTING;
     }
 
 
@@ -58,20 +63,32 @@ public class SSPBGameOptions {
         return shadowynessCompliment;
     }
 
-    public static SSPBGameOptions load() {
+
+    public void save() {
+        try {
+            writeChanges();
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Couldn't save SSPB options changes", e);
+        }
+
+        SSPBClientMod.LOGGER.info("[SSPB] Saved changes to SSPB options");
+    }
+
+    public static SSPBOptions load() {
         Path path = IPlatformHelper.INSTANCE.getConfigDirectory().resolve(DEFAULT_FILE_NAME);
-        SSPBGameOptions config;
+        SSPBOptions config;
 
         if (Files.exists(path)) {
             try (FileReader reader = new FileReader(path.toFile())) {
-                config = GSON.fromJson(reader, SSPBGameOptions.class);
+                config = GSON.fromJson(reader, SSPBOptions.class);
             }
             catch (IOException e) {
-                throw new RuntimeException("Could not parse SSPB config", e);
+                throw new RuntimeException("Could not parse SSPB options", e);
             }
         }
         else {
-            config = new SSPBGameOptions();
+            config = new SSPBOptions();
         }
 
         config.configPath = path;
@@ -80,13 +97,15 @@ public class SSPBGameOptions {
             config.writeChanges();
         }
         catch (IOException e) {
-            throw new RuntimeException("Couldn't update SSPB config", e);
+            throw new RuntimeException("Couldn't update SSPB options", e);
         }
+
+        config.updateShadowyness(config.shadowynessPercent);
 
         return config;
     }
 
-    public void writeChanges() throws IOException {
+    private void writeChanges() throws IOException {
         Path dir = this.configPath.getParent();
 
         if (!Files.exists(dir)) {

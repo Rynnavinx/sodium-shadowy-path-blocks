@@ -9,7 +9,7 @@ version = "${version}" #mandatory
 displayName = "${mod_name}" #mandatory
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional (see https://docs.neoforged.net/docs/misc/updatechecker/)
 displayURL = "${modrinth_url}" #optional (displayed in the mod UI)
-logoFile = "assets/${mod_id}/icon.png" #optional
+logoFile = "assets/${mod_id}/textures/icon.png" #optional
 authors = "${mod_author}" #optional
 description = '''${description}''' #mandatory (Supports multiline text)
 
@@ -20,11 +20,28 @@ config = "${mod_id}.mixins.json"
 config = "${mod_id}.neoforge.mixins.json"
 
 [[dependencies.${mod_id}]]
-modId = "sodium"
+modId = "neoforge"
 type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[0.6.0-alpha.3,)"
+versionRange = "*"
 ordering = "NONE"
 side = "CLIENT"
+
+[[dependencies.${mod_id}]]
+modId = "sodium"
+type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
+versionRange = "[0.6.0,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
+versionRange = "[1.21,1.21.4]"
+ordering = "NONE"
+side = "CLIENT"
+
+[modproperties.${mod_id}]
+"sodium:config_api_user" = "rynnavinx.sspb.common.client.options.modern.SSPBConfigBuilder"
 
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't

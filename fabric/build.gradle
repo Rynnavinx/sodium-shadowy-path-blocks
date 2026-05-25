@@ -1,6 +1,6 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom-remap'
 }
 
 dependencies {
@@ -13,7 +13,10 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    modImplementation "maven.modrinth:sodium:${sodium_version}-fabric"
+    modCompileOnly "maven.modrinth:sodium:mc1.21.1-0.6.13-fabric"
+
+    modCompileOnly "net.caffeinemc:sodium-fabric:${sodium_version}"
+    modCompileOnly "net.caffeinemc:sodium-fabric-api:${sodium_version}"
 }
 
 loom {
@@ -21,9 +24,9 @@ loom {
     if (aw.exists()) {
         accessWidenerPath.set(aw)
     }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
-    }
+//    mixin {
+//        defaultRefmapName.set("${mod_id}.refmap.json")
+//    }
     runs {
         client {
             client()

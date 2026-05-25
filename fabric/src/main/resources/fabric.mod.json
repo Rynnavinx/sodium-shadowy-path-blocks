@@ -14,7 +14,7 @@
   },
 
   "license": "${license}",
-  "icon": "assets/${mod_id}/icon.png",
+  "icon": "assets/${mod_id}/textures/icon.png",
 
   "custom": {
     "modmenu": {
@@ -29,6 +29,9 @@
   "entrypoints": {
     "client": [
       "rynnavinx.sspb.fabric.client.SSPBFabricClientMod"
+    ],
+    "sodium:config_api_user": [
+      "rynnavinx.sspb.common.client.options.modern.SSPBConfigBuilder"
     ]
   },
   "mixins": [
@@ -38,7 +41,8 @@
   "accessWidener" : "${mod_id}.accesswidener",
 
   "depends": {
-    "fabricloader": ">=0.12.10",
-    "sodium": ">=0.6.0-"
+    "fabricloader": ">=0.16.0",
+    "sodium": ">=0.6.0",
+    "minecraft": ">=1.21 <=1.21.4"
   }
 }
