@@ -1,0 +1,9 @@
+{
+  "sspb.pages.sspb_page.name": "SSPB",
+  "sspb.options.shadowyness.name": "Keamatan Bayang-bayang",
+  "sspb.options.shadowyness.tooltip": "Melaraskan kekuatan bayang-bayang seperti vanila pada blok bukan penuh.\n\n0% - Tiada (lalai Sodium)\n85% - Lalai SSPB\n100% - Maksimum (Kekuatan vanila, tetapi mungkin lebih gelap daripada vanila dalam kes tertentu)\n\nTidak menjejaskan blok laluan apabila \"Gunakan pencahayaan vanila untuk blok laluan\" didayakan.",
+  "sspb.options.onlyaffectpathblocks.name": "Hanya beri kesan kepada blok laluan",
+  "sspb.options.onlyaffectpathblocks.tooltip": "Pepijat dalam Minecraft vanila yang menyebabkan blok laluan berbayang sebenarnya memberi kesan kepada semua blok bukan penuh yang bukan cecair.\n\nSecara lalai, SSPB juga menggunakan pencahayaan lancar seperti vanila pada semua blok bukan penuh yang bukan cecair. Mendayakan pilihan ini akan mengehadkan kesan kepada blok laluan sahaja.",
+  "sspb.options.vanillapathblocklighting.name": "Gunakan pencahayaan vanila untuk blok laluan",
+  "sspb.options.vanillapathblocklighting.tooltip": "Apabila didayakan, pencahayaan untuk blok laluan akan dipaparkan dengan algoritma tepat seperti vanila, dan bukannya versi algoritma pencahayaan Sodium yang diubah suai.\n\nPilihan ini menyahdayakan kesan gelangsar keamatan bayang-bayang pada blok laluan."
+}
