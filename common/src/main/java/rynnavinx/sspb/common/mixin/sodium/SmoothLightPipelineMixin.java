@@ -37,11 +37,12 @@ import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
-import net.minecraft.world.level.block.DirtPathBlock;
+import net.minecraft.world.level.block.PathBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.joml.Vector3f;
 
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -67,7 +68,7 @@ public abstract class SmoothLightPipelineMixin {
 		boolean onlyAffectPathBlocks = SSPBClientMod.options().onlyAffectPathBlocks;
 
 		if((!onlyAffectPathBlocks && blockState.propagatesSkylightDown()) ||
-				(onlyAffectPathBlocks && blockState.getBlock() instanceof DirtPathBlock)){
+				(onlyAffectPathBlocks && blockState.getBlock() instanceof PathBlock)){
 
 			// Mix between actual and full shadowyness, to mix between fixed sodium lighting and bugged vanilla lighting, respectively
 			return (originalWeight * SSPBClientMod.options().getShadowynessCompliment()) + SSPBClientMod.options().getShadowyness();
@@ -94,9 +95,9 @@ public abstract class SmoothLightPipelineMixin {
 		return sspb$getModifiedAOWeight(w1, blockPos);
 	}
 
-	@Inject(method = "calculate", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyParallelFace(Lnet/caffeinemc/mods/sodium/client/model/light/smooth/AoNeighborInfo;Lnet/caffeinemc/mods/sodium/client/model/quad/ModelQuadView;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/caffeinemc/mods/sodium/client/model/light/data/QuadLightData;Z)V", shift = At.Shift.BEFORE), cancellable = true)
-	private void injectVanillaAoCalcForPathBlocks(ModelQuadView quad, BlockPos pos, QuadLightData out, Direction cullFace, Direction lightFace, boolean shade, boolean enhanced, CallbackInfo ci){
-		if(SSPBClientMod.options().vanillaPathBlockLighting && lightCache.getLevel().getBlockState(pos).getBlock() instanceof DirtPathBlock){
+	@Inject(method = "calculate", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/model/light/smooth/SmoothLightPipeline;applyParallelFace(Lnet/caffeinemc/mods/sodium/client/model/light/smooth/AoNeighborInfo;Lnet/caffeinemc/mods/sodium/client/model/quad/ModelQuadView;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/caffeinemc/mods/sodium/client/model/light/data/QuadLightData;Lnet/minecraft/core/Direction;)V", shift = At.Shift.BEFORE), cancellable = true)
+	private void injectVanillaAoCalcForPathBlocks(ModelQuadView quad, BlockPos pos, QuadLightData out, Direction cullFace, Direction lightFace, @Nullable Direction shadeDirectionOverride, boolean enhanced, CallbackInfo ci){
+		if(SSPBClientMod.options().vanillaPathBlockLighting && lightCache.getLevel().getBlockState(pos).getBlock() instanceof PathBlock){
 			sspb$calcVanilla((QuadViewImpl) quad, out.br, out.lm, pos, lightFace);
 			ci.cancel();
 		}
@@ -115,7 +116,7 @@ public abstract class SmoothLightPipelineMixin {
 	// sspb$vanillaMaterialInfo needs to be first, or else sspb$vanillaCalc becomes null for some reason?
 	// not sure what kind of dark magic is causing this
 	@Unique
-	private final BakedQuad.MaterialInfo sspb$vanillaMaterialInfo = new BakedQuad.MaterialInfo(null, ChunkSectionLayer.SOLID, Sheets.cutoutBlockItemSheet(), -1, true, 0);
+	private final BakedQuad.MaterialInfo sspb$vanillaMaterialInfo = new BakedQuad.MaterialInfo(null, ChunkSectionLayer.SOLID, Sheets.cutoutBlockItemSheet(), Sheets.cutoutBlockItemGlintSheet(), Sheets.cutoutBlockItemGlintSpecialSheet(), -1, null, 0);
 	@Unique
 	private final BlockModelLighter sspb$vanillaCalc = new BlockModelLighter();
 	@Unique
